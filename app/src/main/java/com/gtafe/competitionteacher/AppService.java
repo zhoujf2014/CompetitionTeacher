@@ -14,8 +14,17 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.SystemClock;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +40,7 @@ public class AppService extends Service {
     public IntentFilter mFilter;
     public NetworkConnectChangedReceiver mNetworkConnectChangedReceiver;
     public boolean mPixairConnect;
+    Gson gson = new Gson();
 
     public byte headForward = 0;
     List<DataChangeInterFace> mDataChangeInterFaces = new ArrayList<>();
@@ -76,6 +86,123 @@ public class AppService extends Service {
             }
         }
     };
+    private Thread SocketServerThread = new Thread(new Runnable() {
+        public boolean serving;
+        private boolean connectting = true;
+        private ServerSocket server;
+
+        @Override
+        public void run() {
+            while (serving) {
+                connectting = true;
+                while (connectting) {
+                    try {
+                        Log.e(TAG, "run: SocketServerThread  创建ServerSocket");
+                        server = new ServerSocket(888);
+                        server.setSoTimeout(1000);
+                        connectting = false;
+                    } catch (IOException e) {
+                        Log.e(TAG, "run: SocketServerThread  创建ServerSocket失败 2秒后重新连接");
+                        SystemClock.sleep(2000);
+                        e.printStackTrace();
+                    }
+                }
+                while (!server.isClosed()) {
+                    try {
+                        Log.e(TAG, "start: 等待客户端连接……");
+                        Socket socket = server.accept();
+                        Log.e(TAG, "start: 一个客户端连接了！");
+
+                        /**
+                         * 当一个客户端连接后，启动一个线程，来负责与该客户端交互
+                         */
+
+                        ClientHandler handler = new ClientHandler(socket);
+                        new Thread(handler).start();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    });
+    private class ClientHandler implements Runnable {
+        private Socket socket;
+        //客户端地址信息
+        private String host;
+        private OutputStream mOut;
+        private InputStream mIn;
+        private String equipmentNumber;
+
+        public ClientHandler(Socket socket) {
+            this.socket = socket;
+            //通过socket可以得知远端计算机信息
+            InetAddress address = socket.getInetAddress();
+            host = address.getHostAddress();
+            Log.e(TAG, "ClientHandler: " + address);
+        }
+
+        public void run() {
+            try {
+                mOut = socket.getOutputStream();
+                mIn = socket.getInputStream();
+            } catch (Exception e) {
+                Log.e(TAG, "获取输入流失败");
+                e.printStackTrace();
+                return;
+            }
+
+            try {
+                while (mIn != null) {
+                    if (mIn.available() > 0) {
+                        byte[] bytes = new byte[1024];
+                        int read = mIn.read(bytes);
+                        Log.e(TAG, "run: " + read);
+                        if (read > 10) {
+                            String jsonString = new String(bytes, 0, read);
+                            if (jsonString.startsWith("{") && jsonString.endsWith("}")) {
+                                ManageDataBean manageDataBean = gson.fromJson(jsonString, ManageDataBean.class);
+                                if (manageDataBean != null) {
+                                    //interpretWifiData(manageDataBean);
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "接收wifi设备数据失败");
+                e.printStackTrace();
+            } finally {
+                if (socket != null) {
+                    try {
+                        if (mOut != null) {
+                            removeOut(mOut);
+                            mOut.close();
+                        }
+                        if (mIn != null) {
+                            mIn.close();
+                            mIn = null;
+                        }
+                        if (socket.isInputShutdown()) {
+                            socket.shutdownInput();
+                        }
+                        if (socket.isOutputShutdown()) {
+                            socket.shutdownOutput();
+                        }
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    private void removeOut(OutputStream out) {
+
+    }
 
     @Override
     public void onCreate() {
