@@ -40,11 +40,26 @@ public class AppService extends Service {
     public IntentFilter mFilter;
     public NetworkConnectChangedReceiver mNetworkConnectChangedReceiver;
     public boolean mPixairConnect;
-    Gson gson = new Gson();
+    private Gson gson = new Gson();
 
     public byte headForward = 0;
     List<DataChangeInterFace> mDataChangeInterFaces = new ArrayList<>();
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mNetworkConnectChangedReceiver = new NetworkConnectChangedReceiver();
+        mFilter = new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        registerReceiver(mNetworkConnectChangedReceiver, mFilter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            NotificationChannel channel = new NotificationChannel("竞赛", "竞赛", NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
+            Notification notification = new Notification.Builder(this, "竞赛").setSmallIcon(R.drawable.ic_launcher_foreground).build();
+            startForeground(1, notification);
+        }
+    }
 
     public void addDataChangeInterFace(DataChangeInterFace mDataChangeInterFace) {
         mDataChangeInterFaces.add(mDataChangeInterFace);
@@ -86,24 +101,25 @@ public class AppService extends Service {
             }
         }
     };
+    private boolean serving = true;
     private Thread SocketServerThread = new Thread(new Runnable() {
-        public boolean serving;
+
         private boolean connectting = true;
         private ServerSocket server;
 
         @Override
         public void run() {
-            while (serving) {
+            while (mDestroy) {
                 connectting = true;
                 while (connectting) {
                     try {
                         Log.e(TAG, "run: SocketServerThread  创建ServerSocket");
-                        server = new ServerSocket(888);
+                        server = new ServerSocket(8888);
                         server.setSoTimeout(1000);
                         connectting = false;
                     } catch (IOException e) {
                         Log.e(TAG, "run: SocketServerThread  创建ServerSocket失败 2秒后重新连接");
-                        SystemClock.sleep(2000);
+                        SystemClock.sleep(1000);
                         e.printStackTrace();
                     }
                 }
@@ -204,21 +220,8 @@ public class AppService extends Service {
 
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mNetworkConnectChangedReceiver = new NetworkConnectChangedReceiver();
-        mFilter = new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        registerReceiver(mNetworkConnectChangedReceiver, mFilter);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-            NotificationChannel channel = new NotificationChannel("竞赛", "竞赛", NotificationManager.IMPORTANCE_HIGH);
-            notificationManager.createNotificationChannel(channel);
-            Notification notification = new Notification.Builder(this, "竞赛").setSmallIcon(R.drawable.ic_launcher_foreground).build();
-            startForeground(1, notification);
-        }
-    }
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -267,7 +270,6 @@ public class AppService extends Service {
                     }
                 }
             }
-
         }
     }
 
