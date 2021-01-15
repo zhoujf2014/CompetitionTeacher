@@ -57,7 +57,7 @@ public class LoginActivity extends BaseActivity implements DataChangeInterFace {
     protected void init() {
         initState();
 
-        // mUser.setText(mSp.getString("username", "admin"));
+        // mUser.setText(mSp.getString("username", "admin"));a
         updata();
         checkPermission();
     }
