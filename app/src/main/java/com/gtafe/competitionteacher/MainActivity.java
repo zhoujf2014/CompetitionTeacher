@@ -19,14 +19,28 @@ import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
 
-    @BindView(R.id.bt_study)
+    @BindView(R.id.main_bt_study)
     TextView mBtStudy;
-    @BindView(R.id.bt_train)
+    @BindView(R.id.main_bt_train)
     TextView mBtTrain;
-    @BindView(R.id.bt_competition)
+    @BindView(R.id.main_bt_competition)
     TextView mBtCompetition;
-    @BindView(R.id.tv_ip)
+    @BindView(R.id.main_tv_ip)
     TextView mTvIp;
+    @BindView(R.id.main_et_ip)
+    TextView mEtIp;
+    @BindView(R.id.main_et_255)
+    TextView mEt255;
+    @BindView(R.id.main_et_gateway)
+    TextView mEtgateway;
+    @BindView(R.id.main_comfir)
+    TextView mcomfir;
+    @BindView(R.id.main_back)
+    TextView mBack;
+    @BindView(R.id.open_all)
+    TextView mOpenAll;
+    @BindView(R.id.close_all)
+    TextView mCloseAll;
     @BindView(R.id.rv_list)
     RecyclerView mRvList;
 
@@ -65,15 +79,28 @@ public class MainActivity extends BaseActivity {
         return R.layout.activity_main;
     }
 
-    @OnClick({R.id.bt_study, R.id.bt_train, R.id.bt_competition})
+    @OnClick({R.id.main_bt_train, R.id.main_bt_competition, R.id.main_tv_ip, R.id.main_et_ip, R.id.main_et_255, R.id.main_et_gateway, R.id.main_comfir, R.id.main_back, R.id.open_all, R.id.close_all})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.bt_study:
-                refreshWifiList();
+            case R.id.main_bt_train:
                 break;
-            case R.id.bt_train:
+            case R.id.main_bt_competition:
                 break;
-            case R.id.bt_competition:
+            case R.id.main_tv_ip:
+                break;
+            case R.id.main_et_ip:
+                break;
+            case R.id.main_et_255:
+                break;
+            case R.id.main_et_gateway:
+                break;
+            case R.id.main_comfir:
+                break;
+            case R.id.main_back:
+                break;
+            case R.id.open_all:
+                break;
+            case R.id.close_all:
                 break;
         }
     }
@@ -81,7 +108,7 @@ public class MainActivity extends BaseActivity {
     private void refreshWifiList() {
         List<ScanResult> wifiList = WifiUtils.getInstance(mContext).getWifiList();
         for (ScanResult scanResult : wifiList) {
-          //  scanResult.BSSID;
+            //  scanResult.BSSID;
         }
     }
 }

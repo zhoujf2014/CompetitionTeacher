@@ -34,14 +34,14 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/bt_study"
+                android:id="@+id/main_bt_study"
                 style="@style/style_mode"
                 android:background="@null"
                 android:drawableTop="@mipmap/xueximoshilogo"
                 android:text="学习模式" />
 
             <TextView
-                android:id="@+id/bt_train"
+                android:id="@+id/main_bt_train"
 
                 style="@style/style_mode"
                 android:background="@null"
@@ -50,7 +50,7 @@
                 android:text="训练模式" />
 
             <TextView
-                android:id="@+id/bt_competition"
+                android:id="@+id/main_bt_competition"
                 style="@style/style_mode"
                 android:background="@null"
 
@@ -61,7 +61,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_ip"
+            android:id="@+id/main_tv_ip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
@@ -115,18 +115,22 @@
             <Spinner style="@style/wificonnet_gateway" />
 
             <EditText
+                android:id="@+id/main_et_ip"
                 style="@style/wificonnet_gateway"
                 android:hint="请输入ip" />
 
             <EditText
+                android:id="@+id/main_et_255"
                 style="@style/wificonnet_gateway"
                 android:hint="请输入子网掩码" />
 
             <EditText
+                android:id="@+id/main_et_gateway"
                 style="@style/wificonnet_gateway"
                 android:hint="请输入网关地址" />
 
             <TextView
+                android:id="@+id/main_comfir"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -150,7 +154,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+android:id="@+id/main_back"
             android:drawableTop="@mipmap/tuichu"
             android:text="退出设置"
             android:textColor="#FFFFFF" />
@@ -163,6 +167,7 @@
             android:paddingTop="5dp">
 
             <TextView
+                android:id="@+id/open_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_bg_login_confir"
@@ -172,6 +177,7 @@
                 android:textSize="15sp" />
 
             <TextView
+                android:id="@+id/close_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"

@@ -19,6 +19,7 @@
             android:layout_height="50dp">
 
             <ImageView
+                android:padding="5dp"
                 android:src="@mipmap/icon_sxsb_list_pre1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
