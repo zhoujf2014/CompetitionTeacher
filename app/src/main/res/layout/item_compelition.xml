@@ -6,10 +6,11 @@
     >
 
     <LinearLayout
+        android:padding="10dp"
         android:layout_width="match_parent"
 
         android:layout_height="match_parent"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:background="@drawable/bg_list_item_unconnet"
         android:orientation="vertical">
 
@@ -18,35 +19,37 @@
             android:layout_height="50dp">
 
             <ImageView
-
-                android:layout_width="50dp"
-                android:layout_height="match_parent" />
+                android:src="@mipmap/icon_sxsb_list_pre1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/item_name"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="A1"
                 android:textSize="20sp" />
 
             <ImageView
                 android:id="@+id/item_hand"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/mima" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_raise_hands2" />
         </LinearLayout>
 
         <LinearLayout
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/item_power"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-                android:src="@drawable/mima" />
+                android:src="@mipmap/dianyaun" />
 
             <TextView
                 android:id="@+id/item_state"

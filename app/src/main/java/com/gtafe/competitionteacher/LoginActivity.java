@@ -44,7 +44,7 @@ public class LoginActivity extends BaseActivity implements DataChangeInterFace {
     @BindView(R.id.login_name_en)
     TextView mLoginNameEn;
     private SharedPreferences mSp;
-    public AppService mAppService;
+
 
 
     @Override
@@ -132,35 +132,73 @@ public class LoginActivity extends BaseActivity implements DataChangeInterFace {
 
     }
 
-    private boolean isShow;
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        isShow = false;
+
+
+
+
+    private void checkPermission() {
+
+        if (!hasPermissions(mContext, RUNTIME_PERMISSIONS)) {
+            ActivityCompat.requestPermissions(this, RUNTIME_PERMISSIONS, REQUEST_CODE_ASK_PERMISSIONS);
+        }
+    }
+
+
+    private static boolean hasPermissions(Context context, String... permissions) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        isShow = true;
-        Intent intent = new Intent(mContext, AppService.class);
-        ServiceConnection conn = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                mAppService = ((AppService.LocalBinder) iBinder).getService();
-                mAppService.addDataChangeInterFace(LoginActivity.this);
+    public void onRequestPermissionsResult(int requestCode, @androidx.annotation.NonNull String[] permissions,
+                                           @androidx.annotation.NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS: {
+                for (int index = 0; index < permissions.length; index++) {
+                    if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
+                        /*
+                         * If the user turned down the permission request in the past and chose the
+                         * Don't ask again option in the permission request system dialog.
+                         */
+                        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[index])) {
+                            Toast.makeText(mContext, "Required permission " + permissions[index]
+                                            + " not granted. "
+                                            + "Please go to settings and turn on for app",
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(mContext, "Required permission " + permissions[index]
+                                    + " not granted", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+                break;
             }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-
-            }
-        };
-        bindService(intent,conn,0);
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
-  /*  private void updataAPP() {
+    private final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
+    private static final String[] RUNTIME_PERMISSIONS = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+
+    };
+
+    @Override
+    public void onConnectStateChange(boolean b) {
+
+    }
+      /*  private void updataAPP() {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(mContext)
                 .setTitle("提示")
                 .setMessage("是否更新软件？")
@@ -237,65 +275,4 @@ public class LoginActivity extends BaseActivity implements DataChangeInterFace {
 
 
     }*/
-
-    private void checkPermission() {
-
-        if (!hasPermissions(mContext, RUNTIME_PERMISSIONS)) {
-            ActivityCompat.requestPermissions(this, RUNTIME_PERMISSIONS, REQUEST_CODE_ASK_PERMISSIONS);
-        }
-    }
-
-
-    private static boolean hasPermissions(Context context, String... permissions) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @androidx.annotation.NonNull String[] permissions,
-                                           @androidx.annotation.NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_ASK_PERMISSIONS: {
-                for (int index = 0; index < permissions.length; index++) {
-                    if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
-                        /*
-                         * If the user turned down the permission request in the past and chose the
-                         * Don't ask again option in the permission request system dialog.
-                         */
-                        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[index])) {
-                            Toast.makeText(mContext, "Required permission " + permissions[index]
-                                            + " not granted. "
-                                            + "Please go to settings and turn on for app",
-                                    Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(mContext, "Required permission " + permissions[index]
-                                    + " not granted", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
-                break;
-            }
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
-    private final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
-    private static final String[] RUNTIME_PERMISSIONS = {
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.INTERNET,
-
-    };
-
-    @Override
-    public void onConnectStateChange(boolean b) {
-
-    }
 }

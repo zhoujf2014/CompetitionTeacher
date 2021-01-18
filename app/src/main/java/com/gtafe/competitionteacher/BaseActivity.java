@@ -2,11 +2,14 @@ package com.gtafe.competitionteacher;
 
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 import android.view.WindowManager;
@@ -21,11 +24,14 @@ import butterknife.ButterKnife;
  * Created by ZhouJF on 2018/4/7.
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements DataChangeInterFace {
     protected static final String TAG = "BaseActivity";
     public Context mContext;
     public Activity mActivity;
     public boolean isDebug;
+    public AppService mAppService;
+
+    protected boolean isShow;
     private Handler mHandler = new Handler() {
 
         @Override
@@ -61,6 +67,32 @@ public abstract class BaseActivity extends AppCompatActivity {
             intent.putExtras(bundle);
         }
         startActivity(intent);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isShow = false;
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isShow = true;
+        Intent intent = new Intent(mContext, AppService.class);
+        ServiceConnection conn = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                mAppService = ((AppService.LocalBinder) iBinder).getService();
+                mAppService.addDataChangeInterFace(BaseActivity.this);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+
+            }
+        };
+        bindService(intent,conn,0);
     }
 
     protected void showLog(String TAG, String msg) {
@@ -124,5 +156,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onConnectStateChange(boolean b) {
+
     }
 }
