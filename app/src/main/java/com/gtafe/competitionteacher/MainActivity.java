@@ -4,6 +4,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -29,6 +32,12 @@ public class MainActivity extends BaseActivity {
         CompelitionAdapter compelitionAdapter = new CompelitionAdapter(mContext);
         mRvList.setLayoutManager(new GridLayoutManager(mContext,6));
         mRvList.setAdapter(compelitionAdapter);
+        List<ManageDataBean> manageDataBeans  =new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            manageDataBeans.add(new ManageDataBean());
+        }
+        compelitionAdapter.setData(manageDataBeans);
+        compelitionAdapter.notifyDataSetChanged();
     }
 
     @Override

@@ -2,51 +2,70 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp">
 
-        <ImageView
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_list_item_unconnet"
+        android:orientation="vertical">
 
-            android:layout_width="50dp"
-            android:layout_height="match_parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
 
-        <TextView
-            android:id="@+id/item_name"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+            <ImageView
 
-        <ImageView
-            android:id="@+id/item_hand"
-            android:layout_width="50dp"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp">
+            <TextView
+                android:id="@+id/item_name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="A1"
+                android:textSize="20sp" />
 
-        <ImageView
-            android:id="@+id/item_power"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+            <ImageView
+                android:id="@+id/item_hand"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/mima" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/item_state"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/item_power"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+
+                android:src="@drawable/mima" />
+
+            <TextView
+                android:id="@+id/item_state"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="比赛中"
+                android:textSize="15sp" />
+        </LinearLayout>
 
 
         <TextView
             android:id="@+id/item_time"
-           android:layout_gravity="center"
-            android:text="01:12:36"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="01:12:36"
+            android:textSize="15sp" />
+    </LinearLayout>
 
 
 </LinearLayout>

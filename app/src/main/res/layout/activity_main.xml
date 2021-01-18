@@ -4,23 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_main"
     android:orientation="vertical"
+    android:paddingLeft="50dp"
+    android:paddingRight="50dp"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="60dp"
         android:gravity="center_vertical">
 
         <TextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="title"
+
+            android:text="竞赛智能控制系统"
+            android:textColor="#FFFFFF"
             android:textSize="30sp" />
 
         <View
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="1dp"
             android:layout_weight="1" />
 
         <LinearLayout
@@ -30,14 +36,25 @@
             <Button
                 android:id="@+id/bt_study"
                 style="@style/style_mode"
+                android:background="@null"
+                android:drawableTop="@drawable/xueximoshilogo"
                 android:text="学习模式" />
 
-            <Button android:id="@+id/bt_train"
+            <Button
+                android:id="@+id/bt_train"
+
                 style="@style/style_mode"
+                android:background="@null"
+
+                android:drawableTop="@drawable/xueximoshilogo"
                 android:text="训练模式" />
 
-            <Button android:id="@+id/bt_competition"
+            <Button
+                android:id="@+id/bt_competition"
                 style="@style/style_mode"
+                android:background="@null"
+
+                android:drawableTop="@drawable/xueximoshilogo"
                 android:text="竞赛模式" />
 
 
@@ -49,7 +66,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:layout_margin="20dp"
-            android:text="192.168.1.33" />
+            android:text="192.168.1.33"
+            android:textColor="#FFFFFF" />
 
     </LinearLayout>
 
@@ -58,20 +76,62 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_list"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
 
-        <LinearLayout
-            android:layout_width="200dp"
-            android:layout_height="match_parent">
+            android:background="@drawable/bg_list"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="设置IP" />
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="10dp"
+                android:text="竞赛设备"
+                android:textColor="#0777D1"
+                android:textSize="15sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="5dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/bg_list"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="30dp">
+
+            <Spinner style="@style/wificonnet_gateway" />
+
+            <EditText
+                style="@style/wificonnet_gateway"
+                android:hint="请输入ip" />
+
+            <EditText
+                style="@style/wificonnet_gateway"
+                android:hint="请输入子网掩码" />
+
+            <EditText
+                style="@style/wificonnet_gateway"
+                android:hint="请输入网关地址" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/selector_bg_login_confir"
+                android:text="确       定"
+                android:textSize="21.15sp" />
 
         </LinearLayout>
     </LinearLayout>
@@ -80,6 +140,36 @@
         android:layout_width="match_parent"
         android:layout_height="60dp">
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:background="@null"
+            android:text="退出设置"
+            android:textColor="#FFFFFF" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingTop="5dp">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_bg_login_confir"
+                android:text="设备批量上电"
+                android:textSize="15sp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/selector_bg_login_confir"
+                android:text="设备批量断电"
+                android:textSize="15sp" />
+        </LinearLayout>
 
     </LinearLayout>
 

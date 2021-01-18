@@ -3,6 +3,7 @@ package com.gtafe.competitionteacher;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -51,10 +52,21 @@ public class CompelitionAdapter extends RecyclerView.Adapter {
 
 
     static class CompelitionViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.item_name)
+        TextView mItemName;
+        @BindView(R.id.item_hand)
+        ImageView mItemHand;
+        @BindView(R.id.item_power)
+        ImageView mItemPower;
+        @BindView(R.id.item_state)
+        TextView mItemState;
+        @BindView(R.id.item_time)
+        TextView mItemTime;
+
 
         public CompelitionViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, view);
+            ButterKnife.bind(this, itemView);
 
         }
 
