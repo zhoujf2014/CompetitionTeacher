@@ -1,12 +1,18 @@
 package com.gtafe.competitionteacher;
 
+import android.content.Intent;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import com.gtafe.competitionteacher.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +34,13 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.main_tv_ip)
     TextView mTvIp;
     @BindView(R.id.main_et_ip)
-    TextView mEtIp;
+    EditText mEtIp;
+    @BindView(R.id.main_et_ssid)
+    EditText mEtSSID;
     @BindView(R.id.main_et_255)
-    TextView mEt255;
+    EditText mEt255;
     @BindView(R.id.main_et_gateway)
-    TextView mEtgateway;
+    EditText mEtgateway;
     @BindView(R.id.main_comfir)
     TextView mcomfir;
     @BindView(R.id.main_back)
@@ -60,11 +68,12 @@ public class MainActivity extends BaseActivity {
             }
         }
     };
+    public WifiManager mWifiManager;
 
     @Override
     protected void init() {
         CompelitionAdapter compelitionAdapter = new CompelitionAdapter(mContext);
-        mRvList.setLayoutManager(new GridLayoutManager(mContext, 3));
+        mRvList.setLayoutManager(new GridLayoutManager(mContext, 6));
         mRvList.setAdapter(compelitionAdapter);
         List<ManageDataBean> manageDataBeans = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -95,8 +104,10 @@ public class MainActivity extends BaseActivity {
             case R.id.main_et_gateway:
                 break;
             case R.id.main_comfir:
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS)); //直接进入手机中的wifi网络设置界面
                 break;
             case R.id.main_back:
+                finish();
                 break;
             case R.id.open_all:
                 break;
@@ -110,5 +121,35 @@ public class MainActivity extends BaseActivity {
         for (ScanResult scanResult : wifiList) {
             //  scanResult.BSSID;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getWifiState();
+
+    }
+
+    private int getWifiState() {
+        // Wifi的连接速度及信号强度：
+        if (mWifiManager == null) {
+
+            mWifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        }
+        // WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        WifiInfo info = mWifiManager.getConnectionInfo();
+        int strength = 0;
+
+
+        if (info.getBSSID() != null) {
+            mEtSSID.setText(info.getSSID());
+            String ip = Util.getIP(mContext);
+            mEtIp.setText(ip);
+            mTvIp.setText(ip);
+
+
+
+        }
+        return strength;
     }
 }
