@@ -18,6 +18,7 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.gtafe.competitionlib.ManageDataBean;
 
 import java.io.IOException;
 import java.io.InputStream;

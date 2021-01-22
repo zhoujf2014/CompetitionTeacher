@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.gtafe.competitionlib.ManageDataBean;
+
 import java.util.List;
 
 import androidx.annotation.NonNull;

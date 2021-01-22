@@ -1,2 +1,4 @@
+include ':competitionlib'
+include ':competitionstudent'
 include ':app'
 rootProject.name = "CompetitionTeacher"

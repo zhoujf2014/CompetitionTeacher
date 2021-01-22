@@ -14,6 +14,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.WindowManager;
 
+import com.gtafe.competitionlib.GtaToast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;

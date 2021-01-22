@@ -12,7 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.gtafe.competitionteacher.utils.Util;
+
+import com.gtafe.competitionlib.ManageDataBean;
+import com.gtafe.competitionlib.WifiUtils;
+import com.gtafe.competitionlib.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,9 +149,6 @@ public class MainActivity extends BaseActivity {
             String ip = Util.getIP(mContext);
             mEtIp.setText(ip);
             mTvIp.setText(ip);
-
-
-
         }
         return strength;
     }
