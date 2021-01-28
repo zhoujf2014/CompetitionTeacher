@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@mipmap/bg1"
+    android:orientation="vertical"
+    tools:context=".SettingActivity">
+
+    <TextView
+        android:id="@+id/setting_ip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_margin="20dp"
+        android:text="教师端IP:192.168.1.33"
+        android:textSize="@dimen/setting_text_size" />
+
+    <LinearLayout
+        android:layout_width="400dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="@drawable/bg_login_view"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/setting_sn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设备SN：124564154531"
+            android:textSize="@dimen/setting_text_size"
+            android:textColor="@color/tv_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
+
+            <EditText
+                android:id="@+id/setting_et_ip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_et_wifi"
+                android:gravity="center"
+                android:hint="请输入教师端IP"
+                android:singleLine="true"
+                android:textColor="@color/tv_color"
+                android:textColorHint="@color/tv_color"
+                android:textSize="@dimen/setting_text_size" />
+
+            <TextView
+                android:id="@+id/setting_save"
+                android:layout_width="@dimen/bt_heigt"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/bg_bt_login_pre"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="保        存"
+                android:textColor="@color/tv_color"
+                android:textSize="@dimen/setting_text_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
+
+
+            <TextView
+                android:id="@+id/setting_connetstate"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="@mipmap/lainjei"
+                android:gravity="center"
+                android:text="未连接"
+                android:textColor="@color/tv_color"
+
+                android:textSize="@dimen/setting_text_size" />
+
+            <TextView
+                android:id="@+id/setting_connet"
+                android:layout_width="@dimen/bt_heigt"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/bg_bt_login_pre"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="手动连接"
+                android:textColor="@color/tv_color"
+                android:textSize="@dimen/setting_text_size" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
+
+
+            <EditText
+                android:id="@+id/setting_et_bianhao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_et_wifi"
+                android:gravity="center"
+                android:hint="设备编号"
+                android:singleLine="true"
+
+                android:textColor="@color/tv_color"
+                android:textColorHint="@color/tv_color"
+                android:textSize="@dimen/setting_text_size" />
+
+            <TextView
+                android:id="@+id/setting_send"
+                android:layout_width="@dimen/bt_heigt"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/bg_bt_login_pre"
+                android:gravity="center"
+                android:padding="3dp"
+
+                android:text="发送数据"
+                android:textColor="@color/tv_color"
+                android:textSize="@dimen/setting_text_size" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/setting_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:drawableTop="@mipmap/tuichu"
+        android:text="退出设置"
+        android:textSize="@dimen/setting_text_size" />
+
+</LinearLayout>

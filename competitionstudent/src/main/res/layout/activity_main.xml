@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg1"
+    android:orientation="vertical"
+    android:paddingLeft="50dp"
+    android:paddingRight="50dp"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/main_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableLeft="@mipmap/jinagbei"
+            android:drawablePadding="5dp"
+            android:text="竞赛模式"
+            android:textSize="36sp" />
+
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true">
+
+            <TextView
+                android:id="@+id/main_jushuo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:drawableTop="@mipmap/jushoulogo"
+                android:text="举手提问" />
+
+            <TextView
+
+                android:id="@+id/main_power"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="15dp"
+                android:drawableTop="@mipmap/yongdianshenqinglogo"
+                android:text="申请用电" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/main_tv_sn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="设备SN：534861" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="连接状态：" />
+
+            <TextView
+                android:id="@+id/main_tv_connect_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="未连接" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_login_view"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/main_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="center_horizontal"
+            android:text="汽车维修操作"
+            android:textColor="@color/text_blue"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/main_tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:drawableLeft="@mipmap/daojishi"
+
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:text="01:50:30"
+            android:textColor="@color/textcolor"
+            android:textSize="45sp" />
+
+        <TextView
+            android:id="@+id/main_tv_msg"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+
+
+            android:text="竞赛要求：在规定时间内完成维修任务"
+            android:textColor="@color/textcolor"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/main_tv_date"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:text="竞赛时间：2021-03-04 15:00-18:00"
+            android:textColor="@color/textcolor"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/main_comfir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/selector_bg_login_confir"
+            android:paddingLeft="60dp"
+            android:paddingTop="2dp"
+            android:paddingRight="60dp"
+            android:paddingBottom="2dp"
+            android:text="完    成"
+            android:textSize="30sp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:id="@+id/mian_bianhao"
+            style="@style/main_tv"
+            android:text="设备编号：A3" />
+
+        <TextView
+            android:id="@+id/mian_dianya"
+            style="@style/main_tv"
+
+            android:text="设备电压：220v" />
+
+        <TextView
+            android:id="@+id/mian_dianliu"
+            style="@style/main_tv"
+
+            android:text="设备电流：10A" />
+
+        <TextView
+            android:id="@+id/mian_gonglv"
+            style="@style/main_tv"
+
+            android:text="设备功率：100W" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

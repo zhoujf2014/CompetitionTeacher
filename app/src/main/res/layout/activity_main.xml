@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main"
+    android:orientation="vertical"
+    android:paddingLeft="50dp"
+    android:paddingRight="50dp"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="竞赛智能控制系统"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/main_view_mode"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/main_bt_study"
+                style="@style/style_mode"
+                android:background="@null"
+                android:drawableTop="@mipmap/xueximoshilogo"
+                android:text="学习模式" />
+
+            <TextView
+                android:id="@+id/main_bt_test"
+
+                style="@style/style_mode"
+                android:background="@null"
+
+                android:drawableTop="@mipmap/xunlianmoshilogo"
+                android:text="训练模式" />
+
+            <TextView
+                android:id="@+id/main_bt_competition"
+                style="@style/style_mode"
+                android:background="@null"
+
+                android:drawableTop="@mipmap/jingsaimoshilogo"
+                android:text="竞赛模式" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/main_tv_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_margin="20dp"
+            android:text="192.168.1.33"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+
+            android:background="@drawable/bg_list"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="10dp"
+                android:text="竞赛设备"
+                android:textColor="#0777D1"
+                android:textSize="15sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="5dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/main_view_ip"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="2"
+            android:background="@drawable/bg_list"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp">
+
+            <EditText
+                android:id="@+id/main_et_ssid"
+                style="@style/wificonnet_gateway" />
+
+            <EditText
+                android:id="@+id/main_et_ip"
+                style="@style/wificonnet_gateway"
+                android:hint="请输入ip" />
+
+            <EditText
+                android:id="@+id/main_et_255"
+                style="@style/wificonnet_gateway"
+                android:hint="请输入子网掩码"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/main_et_gateway"
+                style="@style/wificonnet_gateway"
+                android:hint="请输入网关地址"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/main_comfir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/selector_bg_login_confir"
+                android:paddingLeft="10dp"
+                android:paddingTop="3dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="3dp"
+                android:text="设    置"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="3dp">
+
+        <TextView
+            android:id="@+id/main_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@mipmap/tuichu"
+            android:text="退出设置"
+            android:textColor="#FFFFFF" />
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingTop="5dp">
+
+            <TextView
+                android:id="@+id/open_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_bg_login_confir"
+                android:padding="10dp"
+                android:text="设备批量上电"
+                android:textColor="#fff"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/close_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/selector_bg_login_confir"
+                android:padding="10dp"
+                android:text="设备批量断电"
+                android:textColor="#fff"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
