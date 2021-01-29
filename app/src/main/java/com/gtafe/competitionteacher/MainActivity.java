@@ -10,6 +10,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -48,6 +49,16 @@ public class MainActivity extends BaseActivity {
     TextView mcomfir;
     @BindView(R.id.main_back)
     TextView mBack;
+
+    @BindView(R.id.main_competition_title)
+    TextView mainCompetitionTitle;
+    @BindView(R.id.main_competition_time)
+    TextView mainCompetitionTime;
+    @BindView(R.id.main_competition_yaoqiu)
+    TextView mainCompetitionYaoqiu;
+    @BindView(R.id.mian_competition_edit)
+    ImageView mainCompetitionEdit;
+
     @BindView(R.id.open_all)
     TextView mOpenAll;
     @BindView(R.id.close_all)
@@ -75,6 +86,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void init() {
+        mainCompetitionYaoqiu.setSelected(true);//实现跑马灯
         CompelitionAdapter compelitionAdapter = new CompelitionAdapter(mContext);
         mRvList.setLayoutManager(new GridLayoutManager(mContext, 6));
         mRvList.setAdapter(compelitionAdapter);
@@ -99,6 +111,9 @@ public class MainActivity extends BaseActivity {
             case R.id.main_bt_competition:
                 break;
             case R.id.main_tv_ip:
+                break;
+            case R.id.mian_competition_edit:
+
                 break;
             case R.id.main_et_ip:
                 break;
