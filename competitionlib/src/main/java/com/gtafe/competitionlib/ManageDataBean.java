@@ -108,7 +108,7 @@ public class ManageDataBean {
         private String time_stop;
         private String des;
         private int state = 1;//1:新建，2：修改，3：删除，4：等待开始，5：正在考试，6：考试结束
-       // private int state = 1;//1:新建，2：修改，3：删除，4：等待开始，5：正在考试，6：考试结束
+       // private int state = 1;//1:新建，2：修改，3：删除，4：等待开始，5：正在考试，6：考试结束6：考试结束
 
         public int getState() {
             return state;
