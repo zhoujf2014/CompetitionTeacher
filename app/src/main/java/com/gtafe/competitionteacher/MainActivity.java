@@ -10,6 +10,7 @@ import android.os.Message;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -55,6 +56,16 @@ public class MainActivity extends BaseActivity {
     TextView mcomfir;
     @BindView(R.id.main_back)
     TextView mBack;
+
+    @BindView(R.id.main_competition_title)
+    TextView mainCompetitionTitle;
+    @BindView(R.id.main_competition_time)
+    TextView mainCompetitionTime;
+    @BindView(R.id.main_competition_yaoqiu)
+    TextView mainCompetitionYaoqiu;
+    @BindView(R.id.mian_competition_edit)
+    ImageView mainCompetitionEdit;
+
     @BindView(R.id.open_all)
     TextView mOpenAll;
     @BindView(R.id.close_all)
@@ -248,6 +259,9 @@ public class MainActivity extends BaseActivity {
                 sendDataToAllClient(manageDataBean);
                 break;
             case R.id.main_tv_ip:
+                break;
+            case R.id.mian_competition_edit:
+
                 break;
             case R.id.main_et_ip:
                 break;
