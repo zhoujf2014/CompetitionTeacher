@@ -7,6 +7,7 @@
     android:padding="25dp">
 
     <TextView
+        android:gravity="center"
         android:id="@+id/view_comfir_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,7 +17,9 @@
     <TextView
         android:id="@+id/view_comfir_msg"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:layout_weight="1"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="35dp"
 

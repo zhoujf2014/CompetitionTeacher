@@ -3,10 +3,13 @@ package com.gtafe.competitionteacher;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.gtafe.competitionlib.GtaToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,17 +23,16 @@ public class GtaAddCompetitonDialog extends AlertDialog {
     public final ConnectDialogHolder mConnectDialogHolder;
 
     OnButtonClickLisener mOnButtonClickLisener;
+    public final Context mContext;
 
     public GtaAddCompetitonDialog(Context context) {
         super(context);
-        View view = View.inflate(context, R.layout.view_comfir, null);
+        mContext = context;
+        View view = View.inflate(context, R.layout.view_add_competition, null);
         setView(view);
         mConnectDialogHolder = new ConnectDialogHolder(view);
     }
 
-    public void setTitle(Drawable icon, String title) {
-        mConnectDialogHolder.setTitle(icon,title);
-    }
 
     public void setMsg(String msg) {
         mConnectDialogHolder.setMsg(msg);
@@ -53,8 +55,16 @@ public class GtaAddCompetitonDialog extends AlertDialog {
         Button mDialogConnectCancle;
         @BindView(R.id.view_comfir_sure)
         Button mDialogConnectSetting;
-        @BindView(R.id.view_comfir_title)
-        TextView mDialogConnectTitle;
+        @BindView(R.id.view_title)
+        TextView mViewTitle;
+        @BindView(R.id.view_competiton_title)
+        TextView mViewCompetitionTitle;
+        @BindView(R.id.view_competiton_time_start)
+        TextView mViewCompetitionStart;
+        @BindView(R.id.view_competiton_time_end)
+        TextView mViewCompetitionEnd;
+        @BindView(R.id.view_competiton_time_des)
+        TextView mViewCompetitionDes;
         @BindView(R.id.view_comfir_msg)
         TextView mDialogConnectMsg;
         AlertDialog alertDialog;
@@ -75,21 +85,29 @@ public class GtaAddCompetitonDialog extends AlertDialog {
                     break;
                 case R.id.view_comfir_sure:
                     if (mOnButtonClickLisener != null) {
-                        mOnButtonClickLisener.OnConfirmButtonClick();
+                        String competitionTitle = mViewCompetitionTitle.getText().toString().trim();
+                        String competitionStart = mViewCompetitionStart.getText().toString().trim();
+                        String competitionEnd = mViewCompetitionEnd.getText().toString().trim();
+                        String competitionDes = mViewCompetitionDes.getText().toString().trim();
+                        if (TextUtils.isEmpty(competitionTitle)) {
+                            GtaToast.toastOne(mContext, "请输入竞赛标题");
+                        }
+                        if (TextUtils.isEmpty(competitionStart)) {
+                            GtaToast.toastOne(mContext, "请输入竞赛开始时间");
+                        }
+                        if (TextUtils.isEmpty(competitionEnd)) {
+                            GtaToast.toastOne(mContext, "请输入竞赛结束时间");
+                        }
+                        if (TextUtils.isEmpty(competitionDes)) {
+                            GtaToast.toastOne(mContext, "请输入竞赛内容");
+                        }
+                        mOnButtonClickLisener.OnConfirmButtonClick(competitionTitle, competitionStart, competitionEnd, competitionDes);
                     }
                     cancel();
                     break;
             }
         }
 
-        public void setTitle(Drawable icon, String title) {
-            mDialogConnectTitle.setText(title);
-            if (icon!=null) {
-                icon.setBounds(0, 0, 120,120);
-                mDialogConnectTitle.setCompoundDrawables(icon,null,null,null);
-            }
-
-        }
 
         public void setMsg(String msg) {
             mDialogConnectMsg.setText(msg);
@@ -111,7 +129,6 @@ public class GtaAddCompetitonDialog extends AlertDialog {
         public void setButtonCancle(String msg) {
             if (msg == null) {
                 mDialogConnectCancle.setVisibility(View.GONE);
-
             } else {
                 mDialogConnectCancle.setVisibility(View.VISIBLE);
                 mDialogConnectCancle.setText(msg);
@@ -120,7 +137,7 @@ public class GtaAddCompetitonDialog extends AlertDialog {
     }
 
     public interface OnButtonClickLisener {
-        void OnConfirmButtonClick();
+        void OnConfirmButtonClick(String title, String startTime, String endTime, String des);
 
         void OnCancleButtonClick();
     }

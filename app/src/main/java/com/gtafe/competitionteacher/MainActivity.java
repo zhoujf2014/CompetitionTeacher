@@ -14,8 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.google.gson.Gson;
 import com.gtafe.competitionlib.GtaToast;
 import com.gtafe.competitionlib.ManageDataBean;
+import com.gtafe.competitionlib.SharePrefrenceUtils;
 import com.gtafe.competitionlib.WifiUtils;
 import com.gtafe.competitionlib.utils.Util;
 
@@ -94,11 +96,12 @@ public class MainActivity extends BaseActivity {
             }
         }
     };
-    public WifiManager mWifiManager;
 
+    public WifiManager mWifiManager;
     public static boolean mIsSetting;
     public CompelitionAdapter mCompelitionAdapter;
     public GtaAlerDialog mGtaAlerDialog;
+    public ManageDataBean.TestBean mTestBean;
 
     @Override
     protected void init() {
@@ -261,7 +264,43 @@ public class MainActivity extends BaseActivity {
             case R.id.main_tv_ip:
                 break;
             case R.id.mian_competition_edit:
+                GtaAddCompetitonDialog gtaAddCompetitonDialog = new GtaAddCompetitonDialog(mContext);
+                gtaAddCompetitonDialog.setOnclikLisener(new GtaAddCompetitonDialog.OnButtonClickLisener() {
+                    @Override
+                    public void OnConfirmButtonClick(String title, String startTime, String endTime, String des) {
 
+                        mTestBean = new ManageDataBean.TestBean(title,startTime,endTime,des);
+                        SharePrefrenceUtils.putString(mContext,Constant.CompetitionBean,new Gson().toJson(mTestBean));
+
+                    }
+
+                    @Override
+                    public void OnCancleButtonClick() {
+                        if (mGtaAlerDialog != null && mGtaAlerDialog.isShowing()) {
+                            mGtaAlerDialog.cancel();
+                        }
+                        mGtaAlerDialog = new GtaAlerDialog(mContext);
+                        mGtaAlerDialog.setButtonCancle("取消");
+                        mGtaAlerDialog.setTitle(null, "删除竞赛");
+
+                        mGtaAlerDialog.setMsg("是否删除竞赛内容");
+                        mGtaAlerDialog.setButtonConfir("确定");
+                        mGtaAlerDialog.setOnclikLisener(new GtaAlerDialog.OnButtonClickLisener() {
+                            @Override
+                            public void OnConfirmButtonClick() {
+                                mTestBean = null;
+                                SharePrefrenceUtils.putString(mContext,Constant.CompetitionBean,new Gson().toJson(mTestBean));
+                            }
+
+                            @Override
+                            public void OnCancleButtonClick() {
+
+                            }
+                        });
+                        mGtaAlerDialog.show();
+                    }
+                });
+                gtaAddCompetitonDialog.show();
                 break;
             case R.id.main_et_ip:
                 break;

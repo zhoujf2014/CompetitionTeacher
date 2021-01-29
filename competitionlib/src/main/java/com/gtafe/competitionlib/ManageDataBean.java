@@ -101,11 +101,29 @@ public class ManageDataBean {
         this.state_control = state_control;
     }
 
-    class TestBean {
+    public static class TestBean {
+
         private String Title;
         private String time_start;
         private String time_stop;
-        private String test;
+        private String des;
+        private int state = 1;//1:新建，2：修改，3：删除，4：等待开始，5：正在考试，6：考试结束
+       // private int state = 1;//1:新建，2：修改，3：删除，4：等待开始，5：正在考试，6：考试结束
+
+        public int getState() {
+            return state;
+        }
+
+        public void setState(int state) {
+            this.state = state;
+        }
+
+        public TestBean(String title, String time_start, String time_stop, String des) {
+            Title = title;
+            this.time_start = time_start;
+            this.time_stop = time_stop;
+            this.des = des;
+        }
 
         public String getTitle() {
             return Title;
@@ -131,12 +149,12 @@ public class ManageDataBean {
             this.time_stop = time_stop;
         }
 
-        public String getTest() {
-            return test;
+        public String getDes() {
+            return des;
         }
 
-        public void setTest(String test) {
-            this.test = test;
+        public void setDes(String des) {
+            this.des = des;
         }
     }
 }

@@ -7,21 +7,32 @@
     android:padding="25dp">
 
     <TextView
-        android:id="@+id/view_comfir_title"
+        android:text="竞赛试题"
+        android:id="@+id/view_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-       />
+        android:layout_gravity="center_horizontal" />
 
-    <TextView
-        android:id="@+id/view_comfir_msg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="35dp"
+    <EditText
+        android:id="@+id/view_competiton_title"
+        style="@style/view_et_bg"
+        android:hint="请输入竞赛标题" />
 
-        android:textColor="@color/textcolor"
-        android:textSize="30sp" />
+    <EditText
+        android:id="@+id/view_competiton_time_start"
+        style="@style/view_et_bg"
+        android:hint="请输入竞赛开始时间" />
+
+    <EditText
+        android:id="@+id/view_competiton_time_end"
+        style="@style/view_et_bg"
+        android:hint="请输入竞赛结束时间" />
+
+    <EditText
+        android:id="@+id/view_competiton_time_des"
+        style="@style/view_et_bg"
+        android:layout_weight="1"
+        android:hint="请输入竞赛内容" />
 
 
     <LinearLayout
@@ -37,6 +48,7 @@
             android:layout_height="@dimen/bt_login_height"
             android:background="@drawable/selector_bg_login_confir"
             android:text="退   出"
+            android:textColor="@color/white"
             android:textSize="20sp" />
 
         <Button
@@ -46,6 +58,8 @@
             android:layout_marginLeft="10dp"
             android:background="@drawable/selector_bg_login_confir"
             android:text="确   定"
+            android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>
+
 </LinearLayout>
