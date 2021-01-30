@@ -33,6 +33,11 @@
         style="@style/view_et_bg"
         android:layout_weight="1"
         android:hint="请输入竞赛内容" />
+    <com.gtafe.competitionteacher.CircleAlarmTimerView
+        android:id="@+id/circletimerview"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+       />
 
 
     <LinearLayout

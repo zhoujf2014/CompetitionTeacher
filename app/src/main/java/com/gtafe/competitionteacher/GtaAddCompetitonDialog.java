@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.gtafe.competitionlib.GtaToast;
@@ -17,6 +19,7 @@ import butterknife.OnClick;
 
 /**
  * Created by ZhouJF on 2020-09-28.
+ *
  */
 public class GtaAddCompetitonDialog extends AlertDialog {
 
@@ -29,14 +32,14 @@ public class GtaAddCompetitonDialog extends AlertDialog {
         super(context);
         mContext = context;
         View view = View.inflate(context, R.layout.view_add_competition, null);
+
+
+
+
         setView(view);
         mConnectDialogHolder = new ConnectDialogHolder(view);
     }
 
-
-    public void setMsg(String msg) {
-        mConnectDialogHolder.setMsg(msg);
-    }
 
     public void setButtonConfir(String msg) {
         mConnectDialogHolder.setButtonConfir(msg);
@@ -58,20 +61,33 @@ public class GtaAddCompetitonDialog extends AlertDialog {
         @BindView(R.id.view_title)
         TextView mViewTitle;
         @BindView(R.id.view_competiton_title)
-        TextView mViewCompetitionTitle;
+        EditText mViewCompetitionTitle;
         @BindView(R.id.view_competiton_time_start)
-        TextView mViewCompetitionStart;
+        EditText mViewCompetitionStart;
         @BindView(R.id.view_competiton_time_end)
-        TextView mViewCompetitionEnd;
+        EditText mViewCompetitionEnd;
         @BindView(R.id.view_competiton_time_des)
-        TextView mViewCompetitionDes;
-        @BindView(R.id.view_comfir_msg)
-        TextView mDialogConnectMsg;
+        EditText mViewCompetitionDes;
+
+        @BindView(R.id.circletimerview)
+        CircleAlarmTimerView circleAlarmTimerView;
         AlertDialog alertDialog;
 
         ConnectDialogHolder(View view) {
             ButterKnife.bind(this, view);
 
+
+            circleAlarmTimerView.setOnTimeChangedListener(new CircleAlarmTimerView.OnTimeChangedListener() {
+                @Override
+                public void start(String starting) {
+                    mViewCompetitionStart.setText(starting);
+                }
+
+                @Override
+                public void end(String ending) {
+                    mViewCompetitionEnd.setText(ending);
+                }
+            });
         }
 
         @OnClick({R.id.view_comfir_cancle, R.id.view_comfir_sure})
@@ -109,12 +125,6 @@ public class GtaAddCompetitonDialog extends AlertDialog {
         }
 
 
-        public void setMsg(String msg) {
-            mDialogConnectMsg.setText(msg);
-
-            mDialogConnectMsg.setGravity(Gravity.CENTER);
-
-        }
 
         public void setButtonConfir(String msg) {
             if (msg == null) {

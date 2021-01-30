@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -61,6 +62,8 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.main_competition_title)
     TextView mainCompetitionTitle;
+    @BindView(R.id.main_view_competition)
+    LinearLayout mainViewCompetition;
     @BindView(R.id.main_competition_time)
     TextView mainCompetitionTime;
     @BindView(R.id.main_competition_yaoqiu)
@@ -102,6 +105,7 @@ public class MainActivity extends BaseActivity {
     public CompelitionAdapter mCompelitionAdapter;
     public GtaAlerDialog mGtaAlerDialog;
     public ManageDataBean.TestBean mTestBean;
+    public GtaAddCompetitonDialog mGtaAddCompetitonDialog;
 
     @Override
     protected void init() {
@@ -125,6 +129,25 @@ public class MainActivity extends BaseActivity {
         mRvList.setAdapter(mCompelitionAdapter);
 
         mCompelitionAdapter.setData(sManageDataBeans);
+        initCompetition();
+    }
+
+    private void initCompetition() {
+        mTestBean = new Gson().fromJson(SharePrefrenceUtils.getString(mContext, Constant.CompetitionBean), ManageDataBean.TestBean.class);
+        if (mTestBean != null) {
+            mainViewCompetition.setVisibility(View.GONE);
+            mainCompetitionTitle.setText(mTestBean.getTitle());
+            mainCompetitionTime.setText(mTestBean.getTime_start());
+            mainCompetitionYaoqiu.setText(mTestBean.getDes());
+        } else {
+            mainViewCompetition.setVisibility(View.GONE);
+
+        }
+
+
+
+
+
 
     }
 
@@ -260,18 +283,37 @@ public class MainActivity extends BaseActivity {
                 manageDataBean.CMD = CHANGEMODE;
                 manageDataBean.MODE = COMPELITE;
                 sendDataToAllClient(manageDataBean);
+
+
+                mGtaAddCompetitonDialog = new GtaAddCompetitonDialog(mContext);
+                mGtaAddCompetitonDialog.setOnclikLisener(new GtaAddCompetitonDialog.OnButtonClickLisener() {
+                    @Override
+                    public void OnConfirmButtonClick(String title, String startTime, String endTime, String des) {
+
+                        mTestBean = new ManageDataBean.TestBean(title, startTime, endTime, des);
+                        SharePrefrenceUtils.putString(mContext, Constant.CompetitionBean, new Gson().toJson(mTestBean));
+                        initCompetition();
+                    }
+
+                    @Override
+                    public void OnCancleButtonClick() {
+                    }
+                });
+                mGtaAddCompetitonDialog.show();
+
+
                 break;
             case R.id.main_tv_ip:
                 break;
             case R.id.mian_competition_edit:
-                GtaAddCompetitonDialog gtaAddCompetitonDialog = new GtaAddCompetitonDialog(mContext);
-                gtaAddCompetitonDialog.setOnclikLisener(new GtaAddCompetitonDialog.OnButtonClickLisener() {
+                mGtaAddCompetitonDialog = new GtaAddCompetitonDialog(mContext);
+                mGtaAddCompetitonDialog.setOnclikLisener(new GtaAddCompetitonDialog.OnButtonClickLisener() {
                     @Override
                     public void OnConfirmButtonClick(String title, String startTime, String endTime, String des) {
 
-                        mTestBean = new ManageDataBean.TestBean(title,startTime,endTime,des);
-                        SharePrefrenceUtils.putString(mContext,Constant.CompetitionBean,new Gson().toJson(mTestBean));
-
+                        mTestBean = new ManageDataBean.TestBean(title, startTime, endTime, des);
+                        SharePrefrenceUtils.putString(mContext, Constant.CompetitionBean, new Gson().toJson(mTestBean));
+                        initCompetition();
                     }
 
                     @Override
@@ -289,7 +331,7 @@ public class MainActivity extends BaseActivity {
                             @Override
                             public void OnConfirmButtonClick() {
                                 mTestBean = null;
-                                SharePrefrenceUtils.putString(mContext,Constant.CompetitionBean,new Gson().toJson(mTestBean));
+                                SharePrefrenceUtils.putString(mContext, Constant.CompetitionBean, "");
                             }
 
                             @Override
@@ -300,7 +342,7 @@ public class MainActivity extends BaseActivity {
                         mGtaAlerDialog.show();
                     }
                 });
-                gtaAddCompetitonDialog.show();
+                mGtaAddCompetitonDialog.show();
                 break;
             case R.id.main_et_ip:
                 break;
@@ -328,11 +370,13 @@ public class MainActivity extends BaseActivity {
                 break;
         }
     }
+
     @Override
     public void notifyData() {
         mCompelitionAdapter.notifyDataSetChanged();
 
     }
+
     @Override
     public void onReceivDataFromServer(ManageDataBean userDataBean) {
 
@@ -340,7 +384,7 @@ public class MainActivity extends BaseActivity {
             case YONGDIAN:
                 GtaAlerDialog gtaAlerDialog = new GtaAlerDialog(mContext);
                 gtaAlerDialog.setTitle("申请用电");
-                gtaAlerDialog.setMessage(userDataBean.getBianhao()+"\n申请用电");
+                gtaAlerDialog.setMessage(userDataBean.getBianhao() + "\n申请用电");
                 gtaAlerDialog.setButtonConfir("批准");
                 gtaAlerDialog.setButtonCancle("拒绝");
                 gtaAlerDialog.setOnclikLisener(new GtaAlerDialog.OnButtonClickLisener() {
@@ -350,7 +394,7 @@ public class MainActivity extends BaseActivity {
                         manageDataBean.CMD = YONGDIAN;
                         manageDataBean.SN = userDataBean.SN;
                         manageDataBean.setState_power(1);
-                        sendDataToClient(manageDataBean.SN,manageDataBean);
+                        sendDataToClient(manageDataBean.SN, manageDataBean);
                     }
 
                     @Override
