@@ -140,7 +140,7 @@ public class GtaAddCompetitonDialog extends AlertDialog {
                                 800,
                                 800,
                                 Gravity.CENTER);
-
+//
                         params.leftMargin = 0;
                         params.rightMargin = 0;
                         pvTime.getDialogContainerLayout().setLayoutParams(params);
