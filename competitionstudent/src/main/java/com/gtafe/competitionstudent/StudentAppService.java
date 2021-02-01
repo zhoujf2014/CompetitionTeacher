@@ -39,6 +39,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import static com.gtafe.competitionstudent.StudentApplication.Bianhao;
+import static com.gtafe.competitionstudent.StudentApplication.mManageDataBean;
 
 /**
  * Created by ZhouJF on 2020/11/20.
@@ -170,7 +171,7 @@ public class StudentAppService extends Service {
     }
 
     public void sendBianhao(String bianhao) {
-        if (mSocketThread!=null) {
+        if (mSocketThread != null) {
 
             ManageDataBean manageDataBean = new ManageDataBean();
             manageDataBean.SN = StudentApplication.SN;
@@ -183,13 +184,13 @@ public class StudentAppService extends Service {
     }
 
     public void sendDataToServer(ManageDataBean manageDataBean) {
-        if (mSocketThread!=null) {
+        if (mSocketThread != null) {
             mSocketThread.sendData(gson.toJson(manageDataBean));
         }
     }
 
     public void sendDataToSerial(byte[] bytes) {
-        if (mSerialPortThread!=null) {
+        if (mSerialPortThread != null) {
             mSerialPortThread.sendData(bytes);
         }
     }
@@ -237,6 +238,9 @@ public class StudentAppService extends Service {
                 try {
                     mOut = socket.getOutputStream();
                     mIn = socket.getInputStream();
+                    StudentApplication.mManageDataBean.CMD = ManageDataBean.EMU_CMD.CONTROL;
+                    mManageDataBean.setState_connet(1);
+                    sendDataToServer(mManageDataBean);
                 } catch (Exception e) {
                     Log.e(TAG, "获取输入流失败");
                     e.printStackTrace();
@@ -323,14 +327,12 @@ public class StudentAppService extends Service {
             }
         }
 
-
         int heartCount = 0;
 
         public void sendHeartData() {
-            ManageDataBean manegeDataBean = StudentApplication.getManegeDataBean();
-            manegeDataBean.CMD = ManageDataBean.EMU_CMD.HERAT;
-            manegeDataBean.heartCount = heartCount++;
-            String data = gson.toJson(manegeDataBean);
+            StudentApplication.mManageDataBean.CMD = ManageDataBean.EMU_CMD.HERAT;
+            StudentApplication.mManageDataBean.heartCount = heartCount++;
+            String data = gson.toJson(StudentApplication.mManageDataBean);
             sendData(data);
         }
 
@@ -424,7 +426,7 @@ public class StudentAppService extends Service {
             if (mOutputStream != null) {
                 try {
                     mOutputStream.write(bytes);
-                    Log.e(TAG, "sendData: "+Util.byteToHexString(bytes) );
+                    Log.e(TAG, "sendData: " + Util.byteToHexString(bytes));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

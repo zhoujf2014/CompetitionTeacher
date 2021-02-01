@@ -16,7 +16,6 @@ import android_serialport_api.SerialPort;
 import android_serialport_api.SerialPortFinder;
 
 
-
 /**
  * Created by ZhouJF on 2021-01-23.
  */
@@ -24,8 +23,10 @@ public class StudentApplication extends Application {
     private static final String TAG = "StudentApplication";
 
     public static String Bianhao;
-    public static  String SN  ;
+    public static String SN;
+
     public static SerialPort mSerialPort;
+    public static ManageDataBean mManageDataBean;
 
     @Override
     public void onCreate() {
@@ -36,22 +37,19 @@ public class StudentApplication extends Application {
         } else {
             startService(new Intent(this, StudentAppService.class));
         }
-        SN = Util.tryGetWifiMac(this);
-        Bianhao = SharePrefrenceUtils.getString(this, Constant.BIANHAO);
+        mManageDataBean = new ManageDataBean();
+        mManageDataBean.SN = Util.tryGetWifiMac(this);
+
+        mManageDataBean.setBianhao(SharePrefrenceUtils.getString(this, Constant.BIANHAO));
     }
 
-    public static ManageDataBean getManegeDataBean() {
-        ManageDataBean manageDataBean = new ManageDataBean();
-        manageDataBean.SN = SN;
-        manageDataBean.setBianhao(Bianhao);
-        return manageDataBean;
-    }
+
 
     public static SerialPort getSerialPort() throws IOException {
         SerialPortFinder serialPortFinder = new SerialPortFinder();
         String[] allDevices = serialPortFinder.getAllDevices();
         for (String allDevice : allDevices) {
-            Log.e(TAG, "getSerialPort: "+allDevice );
+            Log.e(TAG, "getSerialPort: " + allDevice);
         }
         if (mSerialPort == null) {
             synchronized (StudentApplication.class) {

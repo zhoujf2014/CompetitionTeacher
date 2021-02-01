@@ -4,47 +4,50 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_login_view"
     android:orientation="vertical"
-    android:padding="25dp">
+    android:padding="20dp">
 
     <TextView
-        android:text="竞赛试题"
         android:id="@+id/view_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:text="竞赛试题" />
 
     <EditText
+        android:layout_marginTop="10dp"
         android:id="@+id/view_competiton_title"
         style="@style/view_et_bg"
+        android:background="@drawable/bg_et_competition"
         android:hint="请输入竞赛标题" />
 
-    <EditText
+    <TextView
         android:id="@+id/view_competiton_time_start"
+
         style="@style/view_et_bg"
+        android:background="@drawable/bg_et_competition"
         android:hint="请输入竞赛开始时间" />
 
-    <EditText
+    <TextView
         android:id="@+id/view_competiton_time_end"
         style="@style/view_et_bg"
+        android:background="@drawable/bg_et_competition"
+        android:gravity="left"
         android:hint="请输入竞赛结束时间" />
 
     <EditText
         android:id="@+id/view_competiton_time_des"
         style="@style/view_et_bg"
+        android:layout_height="80dp"
         android:layout_weight="1"
+        android:background="@drawable/bg_et_competition"
         android:hint="请输入竞赛内容" />
-    <com.gtafe.competitionteacher.CircleAlarmTimerView
-        android:id="@+id/circletimerview"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-       />
 
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:gravity="center">
 
         <Button
@@ -60,7 +63,7 @@
             android:id="@+id/view_comfir_sure"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/bt_login_height"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="60dp"
             android:background="@drawable/selector_bg_login_confir"
             android:text="确   定"
             android:textColor="@color/white"

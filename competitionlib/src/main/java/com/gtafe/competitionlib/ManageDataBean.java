@@ -11,7 +11,7 @@ public class ManageDataBean {
     }
 
     public enum EMU_MODE {
-        COMPELITE, STUDY, TEST
+        COMPETITION, STUDY, TEST
     }
 
     private String id;
@@ -104,8 +104,8 @@ public class ManageDataBean {
     public static class TestBean {
 
         private String Title;
-        private String time_start;
-        private String time_stop;
+        private long time_start;
+        private long time_stop;
         private String des;
         private int state = 1;//1:新建，2：修改，3：删除，4：等待开始，5：正在考试，6：考试结束
        // private int state = 1;//1:新建，2：修改，3：删除，4：等待开始，5：正在考试，6：考试结束6：考试结束
@@ -118,7 +118,7 @@ public class ManageDataBean {
             this.state = state;
         }
 
-        public TestBean(String title, String time_start, String time_stop, String des) {
+        public TestBean(String title, long time_start, long time_stop, String des) {
             Title = title;
             this.time_start = time_start;
             this.time_stop = time_stop;
@@ -133,19 +133,19 @@ public class ManageDataBean {
             Title = title;
         }
 
-        public String getTime_start() {
+        public long getTime_start() {
             return time_start;
         }
 
-        public void setTime_start(String time_start) {
+        public void setTime_start(long time_start) {
             this.time_start = time_start;
         }
 
-        public String getTime_stop() {
+        public long getTime_stop() {
             return time_stop;
         }
 
-        public void setTime_stop(String time_stop) {
+        public void setTime_stop(long time_stop) {
             this.time_stop = time_stop;
         }
 

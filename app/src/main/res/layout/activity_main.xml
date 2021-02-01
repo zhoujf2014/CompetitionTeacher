@@ -138,8 +138,9 @@
                         android:id="@+id/mian_competition_edit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
+                        android:layout_marginRight="6dp"
                         android:padding="3dp"
+                        android:layout_gravity="center_vertical"
                         android:src="@mipmap/bainjijingsai" />
                 </LinearLayout>
 

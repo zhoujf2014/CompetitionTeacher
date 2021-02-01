@@ -14,6 +14,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -40,7 +41,9 @@ public class Util {
             stringBuilder.append(str + " ");
         }
         return stringBuilder.toString();
-    }    public static String byteToHexStringAddr(byte[] buffer) {
+    }
+
+    public static String byteToHexStringAddr(byte[] buffer) {
         StringBuilder stringBuilder = new StringBuilder();
         if (buffer == null || buffer.length <= 0) {
             return null;
@@ -106,7 +109,7 @@ public class Util {
         String stra = null;
         dectem = (double) vdec14(by);
 
-		/*double wd = (dectem / 50 - 20);*/
+        /*double wd = (dectem / 50 - 20);*/
         double wd = dectem / 16 - 80;  //  (mv/160-4)/16*160-40
         /*DecimalFormat df = new DecimalFormat("##0.00");
         stra = df.format(wd);
@@ -119,7 +122,7 @@ public class Util {
         double sd = (dectem / 160) / 16 * 50;  //[6.25*(mv/160)]-25
         return sd;
 
-		/*double sd = (dectem /50);*/
+        /*double sd = (dectem /50);*/
         /*DecimalFormat df = new DecimalFormat("##0.00");
         stra = df.format(sd);
 		return stra;*/
@@ -186,7 +189,7 @@ public class Util {
         Double dectem = (double) 0;
         String stra = null;
         dectem = (double) vdec14(by);
-		/*double dqy = (dectem * 24);*/
+        /*double dqy = (dectem * 24);*/
         double dqy = (dectem / 160) / 16 * 120;
         DecimalFormat df = new DecimalFormat("##0.00");
         stra = df.format(dqy);
@@ -198,7 +201,7 @@ public class Util {
         Double dectem = (double) 0;
         String stra = null;
         dectem = (double) vdec14(by);
-		/*double tr = (dectem /50);*/
+        /*double tr = (dectem /50);*/
         double tr = 6.25 * (dectem / 160) - 25;
         DecimalFormat df = new DecimalFormat("##0.00");
         stra = df.format(tr);
@@ -209,7 +212,7 @@ public class Util {
         Double dectem = (double) 0;
         String stra = null;
         dectem = (double) vdec14(by);
-		/*double fs = (dectem *3)/500;*/
+        /*double fs = (dectem *3)/500;*/
         Log.d(STR_UTIL, "fs=" + dectem);
         double fs = (dectem / 160) / 16 * 30;
         DecimalFormat df = new DecimalFormat("##0.00");
@@ -490,7 +493,7 @@ public class Util {
 
                     StringBuilder res1 = new StringBuilder();
                     for (byte b : macBytes) {
-                        res1.append(String.format("%02X:",b));
+                        res1.append(String.format("%02X:", b));
                     }
 
                     if (res1.length() > 0) {
@@ -593,6 +596,38 @@ public class Util {
         return format;
     }
 
+    public static String getFormatDate(Date date) {
+
+        long l = date.getTime();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+
+        String format = dateFormat.format(l);
+
+
+        return format;
+    }
+
+    public static String getFormatDate(long l) {
+
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+
+        String format = dateFormat.format(l);
+
+
+        return format;
+    }
+   public static String getFormattime(long l) {
+
+
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+
+        String format = dateFormat.format(l);
+
+
+        return format;
+    }
+
     public static String getCurrentPm() {
 
         long l = System.currentTimeMillis();
@@ -645,7 +680,7 @@ public class Util {
             return null;
         }
         for (int i = start; i < start + len; i++) {
-            bytes[i-start] = buffer[i];
+            bytes[i - start] = buffer[i];
         }
         return bytes;
     }
@@ -665,26 +700,25 @@ public class Util {
         }
         return stringBuilder.toString();
     }
-    public static String getIP(Context context){
+
+    public static String getIP(Context context) {
 
         try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
                 NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();)
-                {
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress() && (inetAddress instanceof Inet4Address))
-                    {
+                    if (!inetAddress.isLoopbackAddress() && (inetAddress instanceof Inet4Address)) {
                         return inetAddress.getHostAddress().toString();
                     }
                 }
             }
-        }
-        catch (SocketException ex){
+        } catch (SocketException ex) {
             ex.printStackTrace();
         }
         return null;
     }
+
     /**
      * 字节转换为浮点
      *
@@ -703,29 +737,32 @@ public class Util {
         l |= ((long) b[index + 0] << 24);
         return Float.intBitsToFloat(l);
     }
+
     //改变多路开关的状态
     public static byte[] togleSwitch(byte[] data, int i) {
         byte state = data[i];
         data[i] = (byte) (state ^ 1);
         return data;
     }
+
     public static String floatTString(float f, int num) {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("0.");
         for (int i = 0; i < num; i++) {
             stringBuffer.append(0);
         }
-        DecimalFormat decimalFormat=new DecimalFormat("0.0");
+        DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
         return decimalFormat.format(f);
     }
-    public static int byte2int(byte[]res,int index){
+
+    public static int byte2int(byte[] res, int index) {
 
 //一个byte数据左移24位变成0x??000000，再右移8位变成0x00??0000
 
-        int targets=(res[index+3]&0xff)|((res[index+2]<<8)&0xff00)//|表示安位或
+        int targets = (res[index + 3] & 0xff) | ((res[index + 2] << 8) & 0xff00)//|表示安位或
 
-                |((res[index+1]<<24)>>>8)|(res[index+0]<<24);
+                | ((res[index + 1] << 24) >>> 8) | (res[index + 0] << 24);
 
         return targets;
 

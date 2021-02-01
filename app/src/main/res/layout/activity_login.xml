@@ -7,8 +7,8 @@
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <ImageView
@@ -51,10 +51,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginRight="100dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|right"
+        android:layout_marginRight="100dp"
         android:background="@drawable/bg_login_view"
         android:focusable="true"
         android:focusableInTouchMode="true"
@@ -63,11 +63,11 @@
         android:padding="30dp">
 
         <TextView
-            android:textColor="#0777D1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:text="登录" />
+            android:text="登录"
+            android:textColor="#0777D1"
+            android:textSize="24sp" />
 
         <EditText
             android:id="@+id/user"
@@ -78,12 +78,11 @@
             android:drawableLeft="@mipmap/yonghuming"
             android:drawablePadding="3dp"
             android:gravity="center"
-android:text="admin"
             android:padding="8dp"
+            android:text="admin1"
             android:textSize="9sp" />
 
         <EditText
-            android:text="gtafe2018"
             android:id="@+id/pwd"
             android:layout_width="@dimen/edit_width"
             android:layout_height="@dimen/edit_height"
@@ -94,6 +93,7 @@ android:text="admin"
             android:gravity="center"
             android:inputType="textPassword"
             android:padding="8dp"
+            android:text="gtafe2018"
             android:textSize="9sp" />
 
         <TextView

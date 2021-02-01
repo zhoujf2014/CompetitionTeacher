@@ -94,7 +94,6 @@ public class GtaAlerDialog extends AlertDialog {
         public void setMsg(String msg) {
             mDialogConnectMsg.setText(msg);
 
-            mDialogConnectMsg.setGravity(Gravity.CENTER);
 
         }
 

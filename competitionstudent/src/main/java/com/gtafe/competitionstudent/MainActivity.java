@@ -1,6 +1,5 @@
 package com.gtafe.competitionstudent;
 
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.TextView;
 
@@ -11,6 +10,7 @@ import com.gtafe.competitionstudent.serialport.CMD_MSG_CMD;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.CONTROL;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.JUSHOU;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.YONGDIAN;
 
@@ -58,7 +58,6 @@ public class MainActivity extends BaseActivity {
 
     @OnClick({R.id.main_comfir, R.id.main_power, R.id.main_jushuo})
     public void onClicked(View view) {
-        ManageDataBean manegeDataBean = null;
         switch (view.getId()) {
             case R.id.main_comfir:
                 GtaAlerDialog pixAlerDialog = new GtaAlerDialog(mContext);
@@ -71,17 +70,14 @@ public class MainActivity extends BaseActivity {
 
                 break;
             case R.id.main_power:
-                 manegeDataBean = StudentApplication.getManegeDataBean();
-                manegeDataBean.CMD = YONGDIAN;
-                manegeDataBean.setState_power(1);
-                mAppService.sendDataToServer(manegeDataBean);
+                StudentApplication.mManageDataBean.CMD = YONGDIAN;
+                mAppService.sendDataToServer(StudentApplication.mManageDataBean);
 
                 break;
             case R.id.main_jushuo:
-                manegeDataBean = StudentApplication.getManegeDataBean();
-                manegeDataBean.CMD = JUSHOU;
-                manegeDataBean.setState_hand(1);
-                mAppService.sendDataToServer(manegeDataBean);
+                StudentApplication.mManageDataBean.CMD = JUSHOU;
+                StudentApplication.mManageDataBean.setState_hand(1);
+                mAppService.sendDataToServer(StudentApplication.mManageDataBean);
                 break;
 
         }
@@ -93,7 +89,7 @@ public class MainActivity extends BaseActivity {
         switch (userDataBean.CMD) {
             case CHANGEMODE:
                 switch (userDataBean.MODE) {
-                    case COMPELITE:
+                    case COMPETITION:
 
                         mMode.setText("竞赛模式");
 
@@ -139,12 +135,23 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onReceivDataFromSerial(CMD_MSG_BACK cmd_msg_back) {
-        CMD_MSG_CMD cmd_msg_cmd = new CMD_MSG_CMD();
+
         //mAppService.sendDataToSerial(cmd_msg_cmd.pack());
         mTvDianya.setText(String.format("设备电压：%sV", cmd_msg_back.dianya / 10000f));
         mTvDianliu.setText(String.format("设备电流：%sV", cmd_msg_back.dianliu / 10000f));
         mTvGonglv.setText(String.format("设备功率：%sV", cmd_msg_back.gonglv / 10000f));
+        if (StudentApplication.mManageDataBean.getState_power() != cmd_msg_back.powerState) {
+            StudentApplication.mManageDataBean.setState_power(cmd_msg_back.powerState);
+            senStateChange();
+
+        }
     }
+
+    private void senStateChange() {
+        StudentApplication.mManageDataBean.CMD = CONTROL;
+        mAppService.sendDataToServer(StudentApplication.mManageDataBean);
+    }
+
 
     @Override
     public void onConnectStateChange(boolean state) {

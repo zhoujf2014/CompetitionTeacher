@@ -32,7 +32,7 @@ import butterknife.OnClick;
 
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.CHANGEMODE;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.YONGDIAN;
-import static com.gtafe.competitionlib.ManageDataBean.EMU_MODE.COMPELITE;
+import static com.gtafe.competitionlib.ManageDataBean.EMU_MODE.COMPETITION;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_MODE.STUDY;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_MODE.TEST;
 import static com.gtafe.competitionteacher.TeacherApplication.sManageDataBeans;
@@ -106,6 +106,7 @@ public class MainActivity extends BaseActivity {
     public GtaAlerDialog mGtaAlerDialog;
     public ManageDataBean.TestBean mTestBean;
     public GtaAddCompetitonDialog mGtaAddCompetitonDialog;
+    public ManageDataBean.EMU_MODE mEmu_mode;
 
     @Override
     protected void init() {
@@ -135,18 +136,14 @@ public class MainActivity extends BaseActivity {
     private void initCompetition() {
         mTestBean = new Gson().fromJson(SharePrefrenceUtils.getString(mContext, Constant.CompetitionBean), ManageDataBean.TestBean.class);
         if (mTestBean != null) {
-            mainViewCompetition.setVisibility(View.GONE);
+            mainViewCompetition.setVisibility(View.VISIBLE);
             mainCompetitionTitle.setText(mTestBean.getTitle());
-            mainCompetitionTime.setText(mTestBean.getTime_start());
-            mainCompetitionYaoqiu.setText(mTestBean.getDes());
+            mainCompetitionTime.setText("竞赛时间：" + Util.getFormatDate(mTestBean.getTime_start()) + "-" + Util.getFormattime(mTestBean.getTime_stop()));
+            mainCompetitionYaoqiu.setText("竞赛要求：" + mTestBean.getDes());
         } else {
             mainViewCompetition.setVisibility(View.GONE);
 
         }
-
-
-
-
 
 
     }
@@ -208,110 +205,94 @@ public class MainActivity extends BaseActivity {
 
     int bounds = 85;
 
-    @OnClick({R.id.main_bt_test, R.id.main_bt_competition, R.id.main_bt_study, R.id.main_tv_ip, R.id.main_et_ip, R.id.main_et_255, R.id.main_et_gateway, R.id.main_comfir, R.id.main_back, R.id.open_all, R.id.close_all})
+    @OnClick({R.id.main_bt_test, R.id.main_bt_competition, R.id.mian_competition_edit, R.id.main_bt_study, R.id.main_tv_ip, R.id.main_et_ip, R.id.main_et_255, R.id.main_et_gateway, R.id.main_comfir, R.id.main_back, R.id.open_all, R.id.close_all})
     public void onClick(View view) {
         ManageDataBean manageDataBean = null;
-        Drawable drawable;
         switch (view.getId()) {
             case R.id.main_bt_test:
-                mBtTest.setTextColor(getResources().getColor(R.color.mode_yellow));
-                mBtStudy.setTextColor(getResources().getColor(R.color.white));
-                mBtCompetition.setTextColor(getResources().getColor(R.color.white));
 
-                drawable = getResources().getDrawable(R.drawable.xunlianmoshilogo2);
-                drawable.setBounds(0, 0, bounds, bounds);
-                mBtTest.setCompoundDrawables(null, drawable, null, null);
+                if (mEmu_mode != COMPETITION || mTestBean == null) {
+                    changeModeTest();
+                } else {
+                    mGtaAlerDialog = new GtaAlerDialog(mContext);
+                    mGtaAlerDialog.setButtonCancle("取消");
+                    mGtaAlerDialog.setTitle(null, "切换到学习模式");
 
-                drawable = getResources().getDrawable(R.drawable.xueximoshilogo);
-                drawable.setBounds(0, 0, bounds, bounds);
-                mBtStudy.setCompoundDrawables(null, drawable, null, null);
+                    mGtaAlerDialog.setMsg("当前有未结束的竞赛，是否还要切换到学习模式？");
+                    mGtaAlerDialog.setButtonConfir("确定");
+                    mGtaAlerDialog.setOnclikLisener(new GtaAlerDialog.OnButtonClickLisener() {
+                        @Override
+                        public void OnConfirmButtonClick() {
+                            changeModeTest();
+                        }
 
-                drawable = getResources().getDrawable(R.drawable.jingsaimoshilogo2);
-                drawable.setBounds(0, 0, bounds, bounds);
-                mBtCompetition.setCompoundDrawables(null, drawable, null, null);
+                        @Override
+                        public void OnCancleButtonClick() {
 
-
-                manageDataBean = new ManageDataBean();
-                manageDataBean.CMD = CHANGEMODE;
-                manageDataBean.MODE = TEST;
-                sendDataToAllClient(manageDataBean);
+                        }
+                    });
+                    mGtaAlerDialog.show();
+                }
                 break;
             case R.id.main_bt_study:
+                if (mEmu_mode != COMPETITION || mTestBean == null) {
+                    changeModeStudy();
+                } else {
+                    mGtaAlerDialog = new GtaAlerDialog(mContext);
+                    mGtaAlerDialog.setButtonCancle("取消");
+                    mGtaAlerDialog.setTitle(null, "切换到学习模式");
 
-                mBtTest.setTextColor(getResources().getColor(R.color.white));
-                mBtStudy.setTextColor(getResources().getColor(R.color.mode_yellow));
-                mBtCompetition.setTextColor(getResources().getColor(R.color.white));
+                    mGtaAlerDialog.setMsg("当前有未结束的竞赛，是否还要切换到学习模式？");
+                    mGtaAlerDialog.setButtonConfir("确定");
+                    mGtaAlerDialog.setOnclikLisener(new GtaAlerDialog.OnButtonClickLisener() {
+                        @Override
+                        public void OnConfirmButtonClick() {
+                            changeModeStudy();
+                        }
 
-                drawable = getResources().getDrawable(R.drawable.xunlianmoshilogo);
-                drawable.setBounds(0, 0, bounds, bounds);
-                mBtTest.setCompoundDrawables(null, drawable, null, null);
+                        @Override
+                        public void OnCancleButtonClick() {
 
-                drawable = getResources().getDrawable(R.drawable.xueximoshilogo);
-                drawable.setBounds(0, 0, bounds, bounds);
-                mBtStudy.setCompoundDrawables(null, drawable, null, null);
-
-                drawable = getResources().getDrawable(R.drawable.jingsaimoshilogo2);
-                drawable.setBounds(0, 0, bounds, bounds);
-                mBtCompetition.setCompoundDrawables(null, drawable, null, null);
-
-                manageDataBean = new ManageDataBean();
-                manageDataBean.CMD = CHANGEMODE;
-                manageDataBean.MODE = STUDY;
-                sendDataToAllClient(manageDataBean);
-
+                        }
+                    });
+                    mGtaAlerDialog.show();
+                }
 
                 break;
             case R.id.main_bt_competition:
-                mBtTest.setTextColor(getResources().getColor(R.color.white));
-                mBtStudy.setTextColor(getResources().getColor(R.color.white));
-                mBtCompetition.setTextColor(getResources().getColor(R.color.mode_yellow));
+                changeModeCompetition();
 
-                drawable = getResources().getDrawable(R.drawable.xunlianmoshilogo);
-                drawable.setBounds(0, 0, bounds, bounds);
-                mBtTest.setCompoundDrawables(null, drawable, null, null);
+                if (mTestBean == null) {
 
-                drawable = getResources().getDrawable(R.drawable.xueximoshilogo);
-                drawable.setBounds(0, 0, bounds, bounds);
-                mBtStudy.setCompoundDrawables(null, drawable, null, null);
+                    mGtaAddCompetitonDialog = new GtaAddCompetitonDialog(mContext, mTestBean);
+                    mGtaAddCompetitonDialog.setOnclikLisener(new GtaAddCompetitonDialog.OnButtonClickLisener() {
+                        @Override
+                        public void OnConfirmButtonClick(ManageDataBean.TestBean testBean) {
 
-                drawable = getResources().getDrawable(R.drawable.jingsaimoshilogo);
-                drawable.setBounds(0, 0, bounds, bounds);
-                mBtCompetition.setCompoundDrawables(null, drawable, null, null);
+                            mTestBean = testBean;
+                            SharePrefrenceUtils.putString(mContext, Constant.CompetitionBean, new Gson().toJson(mTestBean));
+                            initCompetition();
+                        }
 
-
-                manageDataBean = new ManageDataBean();
-                manageDataBean.CMD = CHANGEMODE;
-                manageDataBean.MODE = COMPELITE;
-                sendDataToAllClient(manageDataBean);
-
-
-                mGtaAddCompetitonDialog = new GtaAddCompetitonDialog(mContext);
-                mGtaAddCompetitonDialog.setOnclikLisener(new GtaAddCompetitonDialog.OnButtonClickLisener() {
-                    @Override
-                    public void OnConfirmButtonClick(String title, String startTime, String endTime, String des) {
-
-                        mTestBean = new ManageDataBean.TestBean(title, startTime, endTime, des);
-                        SharePrefrenceUtils.putString(mContext, Constant.CompetitionBean, new Gson().toJson(mTestBean));
-                        initCompetition();
-                    }
-
-                    @Override
-                    public void OnCancleButtonClick() {
-                    }
-                });
-                mGtaAddCompetitonDialog.show();
+                        @Override
+                        public void OnCancleButtonClick() {
+                        }
+                    });
+                    mGtaAddCompetitonDialog.show();
+                }
 
 
                 break;
             case R.id.main_tv_ip:
                 break;
             case R.id.mian_competition_edit:
-                mGtaAddCompetitonDialog = new GtaAddCompetitonDialog(mContext);
+                mGtaAddCompetitonDialog = new GtaAddCompetitonDialog(mContext, mTestBean);
+                mGtaAddCompetitonDialog.setButtonCancle("删除");
                 mGtaAddCompetitonDialog.setOnclikLisener(new GtaAddCompetitonDialog.OnButtonClickLisener() {
                     @Override
-                    public void OnConfirmButtonClick(String title, String startTime, String endTime, String des) {
+                    public void OnConfirmButtonClick(ManageDataBean.TestBean testBean) {
 
-                        mTestBean = new ManageDataBean.TestBean(title, startTime, endTime, des);
+                        mTestBean = testBean;
                         SharePrefrenceUtils.putString(mContext, Constant.CompetitionBean, new Gson().toJson(mTestBean));
                         initCompetition();
                     }
@@ -332,6 +313,7 @@ public class MainActivity extends BaseActivity {
                             public void OnConfirmButtonClick() {
                                 mTestBean = null;
                                 SharePrefrenceUtils.putString(mContext, Constant.CompetitionBean, "");
+                                initCompetition();
                             }
 
                             @Override
@@ -371,6 +353,88 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private void changeModeTest() {
+        mEmu_mode = TEST;
+        mainViewCompetition.setVisibility(View.GONE);
+
+        Drawable drawable;
+        ManageDataBean manageDataBean;
+        mBtTest.setTextColor(getResources().getColor(R.color.mode_yellow));
+        mBtStudy.setTextColor(getResources().getColor(R.color.white));
+        mBtCompetition.setTextColor(getResources().getColor(R.color.white));
+
+        drawable = getResources().getDrawable(R.drawable.xunlianmoshilogo2);
+        drawable.setBounds(0, 0, bounds, bounds);
+        mBtTest.setCompoundDrawables(null, drawable, null, null);
+
+        drawable = getResources().getDrawable(R.drawable.xueximoshilogo);
+        drawable.setBounds(0, 0, bounds, bounds);
+        mBtStudy.setCompoundDrawables(null, drawable, null, null);
+
+        drawable = getResources().getDrawable(R.drawable.jingsaimoshilogo2);
+        drawable.setBounds(0, 0, bounds, bounds);
+        mBtCompetition.setCompoundDrawables(null, drawable, null, null);
+
+
+        manageDataBean = new ManageDataBean();
+        manageDataBean.CMD = CHANGEMODE;
+        manageDataBean.MODE = TEST;
+        sendDataToAllClient(manageDataBean);
+    }
+
+    private void changeModeStudy() {
+        mEmu_mode = STUDY;
+        mainViewCompetition.setVisibility(View.GONE);
+        Drawable drawable;
+        ManageDataBean manageDataBean;
+        mBtTest.setTextColor(getResources().getColor(R.color.white));
+        mBtStudy.setTextColor(getResources().getColor(R.color.mode_yellow));
+        mBtCompetition.setTextColor(getResources().getColor(R.color.white));
+
+        drawable = getResources().getDrawable(R.drawable.xunlianmoshilogo);
+        drawable.setBounds(0, 0, bounds, bounds);
+        mBtTest.setCompoundDrawables(null, drawable, null, null);
+
+        drawable = getResources().getDrawable(R.drawable.xueximoshilogo);
+        drawable.setBounds(0, 0, bounds, bounds);
+        mBtStudy.setCompoundDrawables(null, drawable, null, null);
+
+        drawable = getResources().getDrawable(R.drawable.jingsaimoshilogo2);
+        drawable.setBounds(0, 0, bounds, bounds);
+        mBtCompetition.setCompoundDrawables(null, drawable, null, null);
+
+        manageDataBean = new ManageDataBean();
+        manageDataBean.CMD = CHANGEMODE;
+        manageDataBean.MODE = STUDY;
+        sendDataToAllClient(manageDataBean);
+    }
+
+    private void changeModeCompetition() {
+        mEmu_mode = COMPETITION;
+
+        Drawable drawable;
+        mBtTest.setTextColor(getResources().getColor(R.color.white));
+        mBtStudy.setTextColor(getResources().getColor(R.color.white));
+        mBtCompetition.setTextColor(getResources().getColor(R.color.mode_yellow));
+
+        drawable = getResources().getDrawable(R.drawable.xunlianmoshilogo);
+        drawable.setBounds(0, 0, bounds, bounds);
+        mBtTest.setCompoundDrawables(null, drawable, null, null);
+
+        drawable = getResources().getDrawable(R.drawable.xueximoshilogo);
+        drawable.setBounds(0, 0, bounds, bounds);
+        mBtStudy.setCompoundDrawables(null, drawable, null, null);
+
+        drawable = getResources().getDrawable(R.drawable.jingsaimoshilogo);
+        drawable.setBounds(0, 0, bounds, bounds);
+        mBtCompetition.setCompoundDrawables(null, drawable, null, null);
+        ManageDataBean manageDataBean = new ManageDataBean();
+        manageDataBean.CMD = CHANGEMODE;
+        manageDataBean.MODE = COMPETITION;
+        sendDataToAllClient(manageDataBean);
+        initCompetition();
+    }
+
     @Override
     public void notifyData() {
         mCompelitionAdapter.notifyDataSetChanged();
@@ -379,12 +443,13 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onReceivDataFromServer(ManageDataBean userDataBean) {
-
+        ManageDataBean singleManageBean = null;
         switch (userDataBean.CMD) {
             case YONGDIAN:
+
                 GtaAlerDialog gtaAlerDialog = new GtaAlerDialog(mContext);
-                gtaAlerDialog.setTitle("申请用电");
-                gtaAlerDialog.setMessage(userDataBean.getBianhao() + "\n申请用电");
+                gtaAlerDialog.setTitle(null,"申请用电");
+                gtaAlerDialog.setMsg(userDataBean.getBianhao() + "\n申请用电");
                 gtaAlerDialog.setButtonConfir("批准");
                 gtaAlerDialog.setButtonCancle("拒绝");
                 gtaAlerDialog.setOnclikLisener(new GtaAlerDialog.OnButtonClickLisener() {
@@ -405,9 +470,20 @@ public class MainActivity extends BaseActivity {
                 gtaAlerDialog.show();
                 break;
             case JUSHOU:
-                ManageDataBean singleManageBean = getSingleManageBean(userDataBean);
+                singleManageBean = getSingleManageBean(userDataBean);
                 if (singleManageBean != null) {
                     singleManageBean.setState_hand(userDataBean.getState_hand());
+                }
+                mCompelitionAdapter.notifyDataSetChanged();
+                break;
+            case CONTROL:
+                singleManageBean = getSingleManageBean(userDataBean);
+                if (singleManageBean != null) {
+                    singleManageBean.setState_hand(userDataBean.getState_hand());
+                    singleManageBean.setState_connet(userDataBean.getState_connet());
+                    singleManageBean.setState_power(userDataBean.getState_power());
+                    singleManageBean.setState_control(userDataBean.getState_control());
+
                 }
                 mCompelitionAdapter.notifyDataSetChanged();
                 break;
