@@ -617,7 +617,16 @@ public class Util {
 
         return format;
     }
-   public static String getFormattime(long l) {
+   public static String getFormatCountDown(long l) {
+
+
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+        String format = dateFormat.format(l);
+
+
+        return format;
+    }  public static String getFormattime(long l) {
 
 
         DateFormat dateFormat = new SimpleDateFormat("HH:mm");

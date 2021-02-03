@@ -1,5 +1,6 @@
 package com.gtafe.competitionteacher;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.wifi.ScanResult;
@@ -31,6 +32,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.CHANGEMODE;
+import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.STARTCOMPETITION;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.YONGDIAN;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_MODE.COMPETITION;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_MODE.STUDY;
@@ -84,13 +86,49 @@ public class MainActivity extends BaseActivity {
 
 
     Handler mHandler = new Handler() {
+
+
+
+        @SuppressLint("HandlerLeak")
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
+             ManageDataBean mManageDataBean;
             switch (msg.what) {
                 case 0:
                     break;
                 case 1:
+
+                    if (mTestBean != null) {
+                        switch (mTestBean.getState()) {
+                            case 0:
+                                break;
+                            case 1:
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                break;
+                            case 4:
+                                long time_start = mTestBean.getTime_start();
+
+                                if (time_start-System.currentTimeMillis()<0) {
+                                    mManageDataBean = new ManageDataBean();
+                                    mManageDataBean.CMD = STARTCOMPETITION;
+                                    mManageDataBean.setTestBean(mTestBean);
+                                    sendDataToAllClient(mManageDataBean);
+                                }
+                                break;
+                            case 5:
+                                break;
+                            case 6:
+                                break;
+                            case 7:
+                                break;
+                        }
+
+
+                    }
                     break;
                 case 2:
                     break;
@@ -131,6 +169,7 @@ public class MainActivity extends BaseActivity {
 
         mCompelitionAdapter.setData(sManageDataBeans);
         initCompetition();
+        initTimeThread();
     }
 
     private void initCompetition() {
@@ -146,6 +185,27 @@ public class MainActivity extends BaseActivity {
         }
 
 
+    }
+
+    private void initTimeThread() {
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                while (true) {
+
+                    try {
+                        Thread.sleep(999);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Message message = mHandler.obtainMessage();
+                    message.what = 1;
+                    mHandler.sendMessage(message);
+                }
+
+            }
+        }.start();
     }
 
     @Override
@@ -448,7 +508,7 @@ public class MainActivity extends BaseActivity {
             case YONGDIAN:
 
                 GtaAlerDialog gtaAlerDialog = new GtaAlerDialog(mContext);
-                gtaAlerDialog.setTitle(null,"申请用电");
+                gtaAlerDialog.setTitle(null, "申请用电");
                 gtaAlerDialog.setMsg(userDataBean.getBianhao() + "\n申请用电");
                 gtaAlerDialog.setButtonConfir("批准");
                 gtaAlerDialog.setButtonCancle("拒绝");

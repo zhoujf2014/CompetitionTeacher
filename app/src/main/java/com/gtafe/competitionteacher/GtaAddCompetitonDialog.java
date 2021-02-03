@@ -42,8 +42,6 @@ public class GtaAddCompetitonDialog extends AlertDialog {
         mContext = context;
         this.testBean = testBean;
         View view = View.inflate(context, R.layout.view_add_competition, null);
-
-
         setView(view);
         mConnectDialogHolder = new ConnectDialogHolder(view);
     }
@@ -128,14 +126,11 @@ public class GtaAddCompetitonDialog extends AlertDialog {
                                     mViewCompetitionEnd.clearFocus();
                                     break;
                             }
-
-
                         }
                     }).setType(new boolean[]{true, true, true, true, true, false}).isDialog(true).isCenterLabel(true).setOutSideCancelable(false).setTitleText("选择竞赛日期").setOutSideColor(Color.GREEN).build();
 
                     Dialog mDialog = pvTime.getDialog();
                     if (mDialog != null) {
-
                         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                                 800,
                                 800,
@@ -208,7 +203,6 @@ public class GtaAddCompetitonDialog extends AlertDialog {
 
         public void setButtonCancle(String msg) {
 
-
             if (msg == null) {
                 mDialogConnectCancle.setVisibility(View.GONE);
             } else {
@@ -228,7 +222,6 @@ public class GtaAddCompetitonDialog extends AlertDialog {
 
     public interface OnButtonClickLisener {
         void OnConfirmButtonClick(ManageDataBean.TestBean testBean);
-
         void OnCancleButtonClick();
     }
 }

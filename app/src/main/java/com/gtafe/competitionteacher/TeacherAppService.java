@@ -63,7 +63,7 @@ public class TeacherAppService extends Service {
 
             NotificationChannel channel = new NotificationChannel("竞赛", "竞赛", NotificationManager.IMPORTANCE_HIGH);
             notificationManager.createNotificationChannel(channel);
-            Notification notification = new Notification.Builder(this, "竞赛").setSmallIcon(R.drawable.ic_launcher_foreground).build();
+            Notification notification = new Notification.Builder(this, "竞赛").setSmallIcon(R.drawable.ic_launcher).build();
             startForeground(1, notification);
         }
         SocketServerThread.start();

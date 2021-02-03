@@ -174,19 +174,19 @@
             android:id="@+id/mian_dianya"
             style="@style/main_tv"
 
-            android:text="设备电压：220v" />
+            android:text="设备电压：--" />
 
         <TextView
             android:id="@+id/mian_dianliu"
             style="@style/main_tv"
 
-            android:text="设备电流：10A" />
+            android:text="设备电流：--" />
 
         <TextView
             android:id="@+id/mian_gonglv"
             style="@style/main_tv"
 
-            android:text="设备功率：100W" />
+            android:text="设备功率：--" />
 
     </LinearLayout>
 

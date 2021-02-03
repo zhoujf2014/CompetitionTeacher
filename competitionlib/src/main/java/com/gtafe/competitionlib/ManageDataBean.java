@@ -7,7 +7,7 @@ package com.gtafe.competitionlib;
 public class ManageDataBean {
 
     public enum EMU_CMD {
-        HERAT, CONTROL, BIANHAO,JUSHOU,YONGDIAN,CHANGEMODE,REQUEST,
+        HERAT, CONTROL, BIANHAO,JUSHOU,YONGDIAN,CHANGEMODE,REQUEST,COMPlETE, STARTCOMPETITION,TIMEALERT
     }
 
     public enum EMU_MODE {
@@ -25,7 +25,7 @@ public class ManageDataBean {
     private TestBean mTestBean;
     private int state_hand;
     private int state_power;
-    private int state_connet;
+    private int state_connet;//0未连接，1：已连接，2：正在竞赛，3：已完成考核
     private int state_control;
 
     public String getId() {
