@@ -72,6 +72,7 @@ public abstract class BaseActivity extends AppCompatActivity implements DataChan
         }
         startActivity(intent);
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -97,7 +98,7 @@ public abstract class BaseActivity extends AppCompatActivity implements DataChan
 
             }
         };
-        bindService(intent, mConn,0);
+        bindService(intent, mConn, 0);
     }
 
     protected void showLog(String TAG, String msg) {
@@ -158,10 +159,19 @@ public abstract class BaseActivity extends AppCompatActivity implements DataChan
     }
 
     protected void sendDataToAllClient(ManageDataBean manageDataBean) {
-        mAppService.sendDataToAllClient(manageDataBean);
-    }   protected void sendDataToClient(String SN,ManageDataBean manageDataBean) {
-        mAppService.sendDataToClient(SN,manageDataBean);
+        if (mAppService!=null) {
+
+            mAppService.sendDataToAllClient(manageDataBean);
+        }
     }
+
+    protected void sendDataToClient(String SN, ManageDataBean manageDataBean) {
+        if (mAppService!=null) {
+
+            mAppService.sendDataToClient(SN, manageDataBean);
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

@@ -337,6 +337,7 @@ public class StudentAppService extends Service {
         }
 
         private void sendData(String data) {
+            data = "data="+data;
             if (mOut != null) {
                 try {
                     mOut.write(data.getBytes());

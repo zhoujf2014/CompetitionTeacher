@@ -33,10 +33,12 @@ import butterknife.OnClick;
 
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.CHANGEMODE;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.STARTCOMPETITION;
+import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.TESTDATA;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.YONGDIAN;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_MODE.COMPETITION;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_MODE.STUDY;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_MODE.TEST;
+import static com.gtafe.competitionteacher.TeacherApplication.mTestBean;
 import static com.gtafe.competitionteacher.TeacherApplication.sManageDataBeans;
 
 public class MainActivity extends BaseActivity {
@@ -88,12 +90,11 @@ public class MainActivity extends BaseActivity {
     Handler mHandler = new Handler() {
 
 
-
         @SuppressLint("HandlerLeak")
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-             ManageDataBean mManageDataBean;
+            ManageDataBean mManageDataBean;
             switch (msg.what) {
                 case 0:
                     break;
@@ -112,7 +113,7 @@ public class MainActivity extends BaseActivity {
                             case 4:
                                 long time_start = mTestBean.getTime_start();
 
-                                if (time_start-System.currentTimeMillis()<0) {
+                                if (time_start - System.currentTimeMillis() < 0) {
                                     mManageDataBean = new ManageDataBean();
                                     mManageDataBean.CMD = STARTCOMPETITION;
                                     mManageDataBean.setTestBean(mTestBean);
@@ -142,7 +143,7 @@ public class MainActivity extends BaseActivity {
     public static boolean mIsSetting;
     public CompelitionAdapter mCompelitionAdapter;
     public GtaAlerDialog mGtaAlerDialog;
-    public ManageDataBean.TestBean mTestBean;
+
     public GtaAddCompetitonDialog mGtaAddCompetitonDialog;
     public ManageDataBean.EMU_MODE mEmu_mode;
 
@@ -179,6 +180,10 @@ public class MainActivity extends BaseActivity {
             mainCompetitionTitle.setText(mTestBean.getTitle());
             mainCompetitionTime.setText("竞赛时间：" + Util.getFormatDate(mTestBean.getTime_start()) + "-" + Util.getFormattime(mTestBean.getTime_stop()));
             mainCompetitionYaoqiu.setText("竞赛要求：" + mTestBean.getDes());
+            ManageDataBean manageDataBean = new ManageDataBean();
+            manageDataBean.CMD = TESTDATA;
+            manageDataBean.setTestBean(mTestBean);
+            sendDataToAllClient(manageDataBean);
         } else {
             mainViewCompetition.setVisibility(View.GONE);
 
@@ -546,6 +551,13 @@ public class MainActivity extends BaseActivity {
 
                 }
                 mCompelitionAdapter.notifyDataSetChanged();
+            case TESTDATA:
+                if (TeacherApplication.mTestBean != null) {
+                    ManageDataBean manageDataBean = new ManageDataBean();
+                    manageDataBean.CMD = TESTDATA;
+                    manageDataBean.setTestBean(TeacherApplication.mTestBean);
+                    sendDataToClient(manageDataBean.SN, manageDataBean);
+                }
                 break;
         }
     }
@@ -572,7 +584,9 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         getWifiState();
 
+
     }
+
 
     private int getWifiState() {
         // Wifi的连接速度及信号强度：

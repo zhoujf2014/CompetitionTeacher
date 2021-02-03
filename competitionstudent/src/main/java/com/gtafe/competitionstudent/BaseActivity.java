@@ -23,6 +23,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import butterknife.ButterKnife;
 
+import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.TESTDATA;
+
 
 /**
  * Created by ZhouJF on 2018/4/7.
@@ -94,6 +96,7 @@ public abstract class BaseActivity extends AppCompatActivity implements DataChan
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                 mAppService = ((StudentAppService.LocalBinder) iBinder).getService();
                 mAppService.addDataChangeInterFace(BaseActivity.this);
+                getTestData();
             }
 
             @Override
@@ -103,7 +106,10 @@ public abstract class BaseActivity extends AppCompatActivity implements DataChan
         };
         bindService(intent, mConn,0);
     }
-
+    private void getTestData() {
+        StudentApplication.mManageDataBean.CMD = TESTDATA;
+        mAppService.sendDataToServer(StudentApplication.mManageDataBean);
+    }
 
     protected void showLog(String TAG, String msg) {
         if (isDebug) {

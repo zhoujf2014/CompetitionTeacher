@@ -18,7 +18,7 @@ import java.util.List;
  * Created by ZhouJF on 2021-01-23.
  */
 public class TeacherApplication extends Application {
-
+    public static ManageDataBean.TestBean mTestBean;
     public static List<ManageDataBean> sManageDataBeans;
 
     @Override

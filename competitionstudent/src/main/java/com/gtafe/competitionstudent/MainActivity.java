@@ -19,7 +19,11 @@ import butterknife.OnClick;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.COMPlETE;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.CONTROL;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.JUSHOU;
+import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.TESTDATA;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.YONGDIAN;
+import static com.gtafe.competitionlib.ManageDataBean.EMU_MODE.COMPETITION;
+import static com.gtafe.competitionlib.ManageDataBean.EMU_MODE.STUDY;
+import static com.gtafe.competitionlib.ManageDataBean.EMU_MODE.TEST;
 
 public class MainActivity extends BaseActivity {
 
@@ -148,6 +152,8 @@ public class MainActivity extends BaseActivity {
 
                 break;
             case R.id.main_power:
+
+
                 if (StudentApplication.mManageDataBean.getState_power() == 1) {
                     mPixAlerDialog = new GtaAlerDialog(mContext);
                     mPixAlerDialog.setMsg("是否关闭电源？");
@@ -172,9 +178,33 @@ public class MainActivity extends BaseActivity {
 
 
                 } else {
-                    StudentApplication.mManageDataBean.CMD = YONGDIAN;
-                    mAppService.sendDataToServer(StudentApplication.mManageDataBean);
-                    startButtonAnimation(mPower);
+                    if (StudentApplication.mManageDataBean.MODE == TEST) {
+                        mPixAlerDialog = new GtaAlerDialog(mContext);
+                        mPixAlerDialog.setMsg("是否打开电源？");
+                        mPixAlerDialog.setTitle(null, "打开电源");
+                        mPixAlerDialog.setButtonConfir("确定");
+                        mPixAlerDialog.setButtonCancle("取消");
+                        mPixAlerDialog.setOnclikLisener(new GtaAlerDialog.OnButtonClickLisener() {
+                            @Override
+                            public void OnConfirmButtonClick() {
+                                CMD_MSG_CMD cmd_msg_cmd = new CMD_MSG_CMD();
+                                cmd_msg_cmd.powerState = 1;
+                                byte[] pack = cmd_msg_cmd.pack();
+                                mAppService.sendDataToSerial(pack);
+                            }
+
+                            @Override
+                            public void OnCancleButtonClick() {
+
+                            }
+                        });
+                        mPixAlerDialog.show();
+                    } else {
+                        StudentApplication.mManageDataBean.CMD = YONGDIAN;
+                        mAppService.sendDataToServer(StudentApplication.mManageDataBean);
+                        startButtonAnimation(mPower);
+                    }
+
                 }
 
 
@@ -184,10 +214,18 @@ public class MainActivity extends BaseActivity {
                 mAppService.sendDataToSerial(pack);*/
                 break;
             case R.id.main_jushuo:
-                StudentApplication.mManageDataBean.CMD = JUSHOU;
-                StudentApplication.mManageDataBean.setState_hand(1);
-                mAppService.sendDataToServer(StudentApplication.mManageDataBean);
-                startButtonAnimation(mPower);
+                if (StudentApplication.mManageDataBean.getState_hand() == 0) {
+                    StudentApplication.mManageDataBean.CMD = JUSHOU;
+                    StudentApplication.mManageDataBean.setState_hand(1);
+                    mAppService.sendDataToServer(StudentApplication.mManageDataBean);
+                    startButtonAnimation(mJushou);
+                } else {
+                    StudentApplication.mManageDataBean.CMD = JUSHOU;
+                    StudentApplication.mManageDataBean.setState_hand(0);
+                    mAppService.sendDataToServer(StudentApplication.mManageDataBean);
+                    mJushou.clearAnimation();
+                }
+
 
     /*       CMD_MSG_CMD cmd_msg_cmd1 = new CMD_MSG_CMD();
             cmd_msg_cmd1.powerState = 0;
@@ -215,6 +253,8 @@ public class MainActivity extends BaseActivity {
             case CHANGEMODE:
                 switch (userDataBean.MODE) {
                     case COMPETITION:
+                        StudentApplication.mManageDataBean.MODE = COMPETITION;
+
                         mMode.setText("竞赛模式");
                         mJushou.setVisibility(View.GONE);
                         mPower.setVisibility(View.GONE);
@@ -224,6 +264,8 @@ public class MainActivity extends BaseActivity {
                         mStartTime = 0;
                         break;
                     case STUDY:
+                        StudentApplication.mManageDataBean.MODE = STUDY;
+
                         mMode.setText("学习模式");
                         mJushou.setVisibility(View.VISIBLE);
                         mPower.setVisibility(View.VISIBLE);
@@ -238,6 +280,12 @@ public class MainActivity extends BaseActivity {
 
                         mJushou.setVisibility(View.GONE);
                         mPower.setVisibility(View.VISIBLE);
+                        StudentApplication.mManageDataBean.MODE = TEST;
+                        if (StudentApplication.mManageDataBean.getState_power() == 1) {
+                            mPower.setText("关闭电源");
+                        } else {
+                            mPower.setText("打开电源");
+                        }
                         mTvTitle.setText("");
 
                         mTvMsg.setVisibility(View.GONE);
@@ -258,13 +306,10 @@ public class MainActivity extends BaseActivity {
                 mJushou.clearAnimation();
                 break;
             case STARTCOMPETITION:
-                ManageDataBean.TestBean testBean = userDataBean.getTestBean();
-                if (testBean != null) {
-                    StudentApplication.sTestBean = testBean;
-                    mTvTitle.setText(testBean.getDes());
-                    mTvDate.setText(testBean.getDes());
-                    mTvTitle.setText(testBean.getDes());
-                }
+
+
+                setTestData(userDataBean.getTestBean());
+
                 break;
             case TIMEALERT:
 
@@ -307,10 +352,23 @@ public class MainActivity extends BaseActivity {
                 mPixAlerDialog.show();
 
 
+                break;
+            case TESTDATA:
+
+                setTestData(userDataBean.getTestBean());
 
                 break;
         }
 
+    }
+
+    private void setTestData(ManageDataBean.TestBean testBean) {
+        if (testBean != null) {
+            StudentApplication.sTestBean = testBean;
+            mTvTitle.setText(testBean.getDes());
+            mTvDate.setText(testBean.getDes());
+            mTvTitle.setText(testBean.getDes());
+        }
     }
 
     @Override
@@ -325,6 +383,12 @@ public class MainActivity extends BaseActivity {
             senStateChange();
 
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     private void senStateChange() {

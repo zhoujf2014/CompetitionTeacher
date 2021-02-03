@@ -37,6 +37,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.TESTDATA;
+
 /**
  * Created by ZhouJF on 2020/11/20.
  */
@@ -242,7 +244,7 @@ public class TeacherAppService extends Service {
                                     if (socketClient.SN.equals(sn)) {
                                         socketClient.sendData(data);
                                         try {
-                                            Thread.sleep(30);
+                                            Thread.sleep(10);
                                         } catch (InterruptedException e) {
                                             e.printStackTrace();
                                         }
@@ -287,7 +289,7 @@ public class TeacherAppService extends Service {
         private Socket socket;
         //客户端地址信息
         private String host;
-        public String SN;
+        public String SN = "";
         private boolean connect = true;
         private OutputStream mOut;
         private InputStream mIn;
@@ -313,7 +315,6 @@ public class TeacherAppService extends Service {
                 e.printStackTrace();
                 return;
             }
-
             try {
                 while (connect && mIn != null && mOut != null) {
                     if (mIn.available() > 0) {
@@ -321,28 +322,37 @@ public class TeacherAppService extends Service {
                         int read = mIn.read(bytes);
                         Log.e(TAG, "run: " + read);
                         if (read > 10) {
-                            String jsonString = new String(bytes, 0, read);
-                            if (jsonString.startsWith("{") && jsonString.endsWith("}")) {
-                                ManageDataBean manageDataBean = gson.fromJson(jsonString, ManageDataBean.class);
-                                if (manageDataBean != null) {
-                                    if (this.SN == null) {
-                                        this.SN = manageDataBean.SN;
-                                        for (ManageDataBean manageDataBean1 : TeacherApplication.sManageDataBeans) {
-                                            if (manageDataBean1.SN.equals(this.SN)) {
-                                                manageDataBean1.setState_connet(1);
-                                                sendNotifyTag();
-                                                break;
 
+                            String jsonString = new String(bytes, 0, read);
+
+                            String[] split = jsonString.split("data=");
+                            for (int i = 0; i < split.length; i++) {
+                                String data = split[i];
+                                if (data.startsWith("{") && data.endsWith("}")) {
+                                    ManageDataBean manageDataBean = gson.fromJson(data, ManageDataBean.class);
+                                    if (manageDataBean != null) {
+                                        if (this.SN == null) {
+                                            this.SN = manageDataBean.SN;
+                                            for (ManageDataBean manageDataBean1 : TeacherApplication.sManageDataBeans) {
+                                                if (manageDataBean1.SN.equals(this.SN)) {
+                                                    manageDataBean1.setState_connet(1);
+                                                    sendNotifyTag();
+                                                    break;
+                                                }
+                                                senTestData(manageDataBean1);
                                             }
                                         }
+                                        Message message = mHandler.obtainMessage();
+                                        message.what = 3;
+                                        message.obj = manageDataBean;
+                                        mHandler.sendMessage(message);
                                     }
-                                    Message message = mHandler.obtainMessage();
-                                    message.what = 3;
-                                    message.obj = manageDataBean;
-                                    mHandler.sendMessage(message);
-
                                 }
                             }
+
+
+                            Log.e(TAG, "run: " + jsonString);
+
                         }
                     }
                 }
@@ -405,6 +415,16 @@ public class TeacherAppService extends Service {
                 }
             }
 
+        }
+
+
+    }
+
+    private void senTestData(ManageDataBean manageDataBean) {
+        if (TeacherApplication.mTestBean != null) {
+            manageDataBean.CMD = TESTDATA;
+            manageDataBean.setTestBean(TeacherApplication.mTestBean);
+            sendDataToClient(manageDataBean.SN, manageDataBean);
         }
 
 
