@@ -11,9 +11,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/competitionlib" />
             <option value="$PROJECT_DIR$/competitionstudent" />
+            <option value="$PROJECT_DIR$/competitionteacher" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

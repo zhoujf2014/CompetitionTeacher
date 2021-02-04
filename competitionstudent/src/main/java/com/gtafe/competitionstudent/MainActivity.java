@@ -365,8 +365,8 @@ public class MainActivity extends BaseActivity {
     private void setTestData(ManageDataBean.TestBean testBean) {
         if (testBean != null) {
             StudentApplication.sTestBean = testBean;
-            mTvTitle.setText(testBean.getDes());
-            mTvDate.setText(testBean.getDes());
+            mTvTitle.setText(testBean.getTitle());
+            mTvDate.setText("竞赛时间：" + Util.getFormatDate(testBean.getTime_start()) + "-" + Util.getFormattime(testBean.getTime_stop()));
             mTvTitle.setText(testBean.getDes());
         }
     }
