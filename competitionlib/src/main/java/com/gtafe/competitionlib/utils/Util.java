@@ -617,16 +617,23 @@ public class Util {
 
         return format;
     }
-   public static String getFormatCountDown(long l) {
+
+    public static String getFormatCountDown(long l) {
+         l = l / 1000;
+        StringBuffer time = new StringBuffer();
+        long hh = l / 60 / 60;
+        long mm = l / 60 % 60;
+        long ss = l % 60 ;
+        time.append(hh<10?"0"+hh:hh).append(":").append(mm<10?"0"+mm:mm).append(":").append(ss<10?"0"+ss:ss);
+       /* DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+        String format = dateFormat.format(l);*/
 
 
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        return time.toString();
+    }
 
-        String format = dateFormat.format(l);
-
-
-        return format;
-    }  public static String getFormattime(long l) {
+    public static String getFormattime(long l) {
 
 
         DateFormat dateFormat = new SimpleDateFormat("HH:mm");

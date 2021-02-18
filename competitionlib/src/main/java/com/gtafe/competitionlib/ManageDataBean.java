@@ -27,6 +27,23 @@ public class ManageDataBean {
     private int state_power;
     private int state_connet;//0未连接，1：已连接，2：正在竞赛，3：已完成考核
     private int state_control;
+    public long time;
+
+    public int getHeartCount() {
+        return heartCount;
+    }
+
+    public void setHeartCount(int heartCount) {
+        this.heartCount = heartCount;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
 
     public String getId() {
         return id;

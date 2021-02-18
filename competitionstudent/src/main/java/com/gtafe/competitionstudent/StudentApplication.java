@@ -27,6 +27,7 @@ public class StudentApplication extends Application {
 
     public static SerialPort mSerialPort;
     public static ManageDataBean mManageDataBean;
+
     public static ManageDataBean.TestBean sTestBean;
 
     @Override

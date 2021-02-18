@@ -2,9 +2,11 @@ package com.gtafe.competitionstudent;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.gtafe.competitionlib.ManageDataBean;
@@ -16,6 +18,7 @@ import androidx.annotation.NonNull;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static android.media.MediaCodec.MetricsConstants.MODE;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.COMPlETE;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.CONTROL;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.JUSHOU;
@@ -45,6 +48,8 @@ public class MainActivity extends BaseActivity {
     TextView mTvMsg;
     @BindView(R.id.main_tv_date)
     TextView mTvDate;
+    @BindView(R.id.main_comfir)
+    TextView mComfir;
 
     @BindView(R.id.mian_bianhao)
     TextView mTvBianhao;
@@ -62,17 +67,23 @@ public class MainActivity extends BaseActivity {
                 case 0:
                     break;
                 case 1:
+                    if (StudentApplication.mManageDataBean.MODE == COMPETITION) {
+                        mTvTime.setText(Util.getFormatCountDown(StudentApplication.mManageDataBean.time));
 
-                    if (StudentApplication.mManageDataBean.getState_power() == 1) {
-                        if (mStartTime == 0) {
-                            mStartTime = System.currentTimeMillis();
-                        }
-                        mTime = System.currentTimeMillis() - mStartTime;
-                        mTvTime.setText(Util.getFormatCountDown(mTime));
                     } else {
-                        mTvTime.setText("00:00:00");
-                        mStartTime = 0;
-                        mTime = 0;
+
+                        if (StudentApplication.mManageDataBean.getState_power() == 1) {
+                            if (mStartTime == 0) {
+                                mStartTime = System.currentTimeMillis();
+                            }
+                            StudentApplication.mManageDataBean.setTime(System.currentTimeMillis() - mStartTime);
+
+                            mTvTime.setText(Util.getFormatCountDown(StudentApplication.mManageDataBean.time));
+                        } else {
+                            mTvTime.setText("00:00:00");
+                            mStartTime = 0;
+                            StudentApplication.mManageDataBean.time = 0;
+                        }
                     }
                     break;
                 case 2:
@@ -88,7 +99,6 @@ public class MainActivity extends BaseActivity {
         }
     };
     public long mStartTime;
-    public long mTime;
 
 
     @Override
@@ -96,6 +106,8 @@ public class MainActivity extends BaseActivity {
         mTvSn.setText("设备SN：" + StudentApplication.SN);
         mTvBianhao.setText("设备编号：" + StudentApplication.Bianhao);
         initTimeThread();
+        modeStudy();
+
     }
 
     private void initTimeThread() {
@@ -130,7 +142,7 @@ public class MainActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.main_comfir:
                 mPixAlerDialog = new GtaAlerDialog(mContext);
-                mPixAlerDialog.setMsg("已完成竞赛项目，用时" + Util.getFormatCountDown(mTime));
+                mPixAlerDialog.setMsg("已完成竞赛项目，用时" + Util.getFormatCountDown(StudentApplication.mManageDataBean.time));
                 mPixAlerDialog.setTitle(getResources().getDrawable(R.mipmap.wancheng2), "");
                 mPixAlerDialog.setButtonConfir("确定");
                 mPixAlerDialog.setButtonCancle("取消");
@@ -167,6 +179,8 @@ public class MainActivity extends BaseActivity {
                             cmd_msg_cmd.powerState = 0;
                             byte[] pack = cmd_msg_cmd.pack();
                             mAppService.sendDataToSerial(pack);
+
+                            StudentApplication.mManageDataBean.setState_power(0);
                         }
 
                         @Override
@@ -191,6 +205,8 @@ public class MainActivity extends BaseActivity {
                                 cmd_msg_cmd.powerState = 1;
                                 byte[] pack = cmd_msg_cmd.pack();
                                 mAppService.sendDataToSerial(pack);
+                                StudentApplication.mManageDataBean.setState_power(1);
+
                             }
 
                             @Override
@@ -203,12 +219,14 @@ public class MainActivity extends BaseActivity {
                         StudentApplication.mManageDataBean.CMD = YONGDIAN;
                         mAppService.sendDataToServer(StudentApplication.mManageDataBean);
                         startButtonAnimation(mPower);
+                        StudentApplication.mManageDataBean.setState_power(1);
+
                     }
 
                 }
 
 
-             /*   CMD_MSG_CMD cmd_msg_cmd = new CMD_MSG_CMD();
+              /*  CMD_MSG_CMD cmd_msg_cmd = new CMD_MSG_CMD();
                 cmd_msg_cmd.powerState = 1;
                 byte[] pack = cmd_msg_cmd.pack();
                 mAppService.sendDataToSerial(pack);*/
@@ -244,13 +262,18 @@ public class MainActivity extends BaseActivity {
         view.startAnimation(animation2);
         return view.getId();
     }
-
+    GtaAlerDialog mPixAlerDialog;
     @Override
     public void onReceivDataFromServer(ManageDataBean userDataBean) {
-        GtaAlerDialog mPixAlerDialog;
+
 
         switch (userDataBean.CMD) {
             case CHANGEMODE:
+                ManageDataBean.TestBean testBean = userDataBean.getTestBean();
+                if (testBean != null) {
+                    StudentApplication.mManageDataBean.setTestBean(testBean);
+                }
+
                 switch (userDataBean.MODE) {
                     case COMPETITION:
                         StudentApplication.mManageDataBean.MODE = COMPETITION;
@@ -258,26 +281,21 @@ public class MainActivity extends BaseActivity {
                         mMode.setText("竞赛模式");
                         mJushou.setVisibility(View.GONE);
                         mPower.setVisibility(View.GONE);
-                        mTvTitle.setText("汽车维修操作");
                         mTvMsg.setVisibility(View.VISIBLE);
                         mTvDate.setVisibility(View.VISIBLE);
+                        mComfir.setVisibility(View.VISIBLE);
+
                         mStartTime = 0;
+                        StudentApplication.mManageDataBean.time = 0;
+                        setTestData(StudentApplication.mManageDataBean.getTestBean());
                         break;
                     case STUDY:
-                        StudentApplication.mManageDataBean.MODE = STUDY;
-
-                        mMode.setText("学习模式");
-                        mJushou.setVisibility(View.VISIBLE);
-                        mPower.setVisibility(View.VISIBLE);
-                        mTvTitle.setText("");
-                        mStartTime = 0;
-                        mTvMsg.setVisibility(View.GONE);
-                        mTvDate.setVisibility(View.GONE);
+                        modeStudy();
                         break;
                     case TEST:
                         mMode.setText("训练模式");
                         mStartTime = 0;
-
+                        StudentApplication.mManageDataBean.time = 0;
                         mJushou.setVisibility(View.GONE);
                         mPower.setVisibility(View.VISIBLE);
                         StudentApplication.mManageDataBean.MODE = TEST;
@@ -286,8 +304,6 @@ public class MainActivity extends BaseActivity {
                         } else {
                             mPower.setText("打开电源");
                         }
-                        mTvTitle.setText("");
-
                         mTvMsg.setVisibility(View.GONE);
                         mTvDate.setVisibility(View.GONE);
                         break;
@@ -312,7 +328,9 @@ public class MainActivity extends BaseActivity {
 
                 break;
             case TIMEALERT:
-
+                if (mPixAlerDialog!=null&&mPixAlerDialog.isShowing()) {
+                    mPixAlerDialog.cancel();
+                }
                 mPixAlerDialog = new GtaAlerDialog(mContext);
                 mPixAlerDialog.setMsg(userDataBean.getMSG());
                 mPixAlerDialog.setTitle(getResources().getDrawable(R.mipmap.wancheng2), "");
@@ -332,7 +350,9 @@ public class MainActivity extends BaseActivity {
                 mPixAlerDialog.show();
                 break;
             case COMPlETE:
-
+                if (mPixAlerDialog!=null&&mPixAlerDialog.isShowing()) {
+                    mPixAlerDialog.cancel();
+                }
                 mPixAlerDialog = new GtaAlerDialog(mContext);
                 mPixAlerDialog.setMsg("竞赛时间已经用完，");
                 mPixAlerDialog.setTitle(null, "竞赛结束");
@@ -358,16 +378,42 @@ public class MainActivity extends BaseActivity {
                 setTestData(userDataBean.getTestBean());
 
                 break;
+            case HERAT:
+                if (StudentApplication.mManageDataBean.MODE == COMPETITION) {
+
+                    StudentApplication.mManageDataBean.setTime(userDataBean.getTime());
+                }
+
+                break;
         }
+
+    }
+
+    private void modeStudy() {
+        StudentApplication.mManageDataBean.MODE = STUDY;
+
+        mMode.setText("学习模式");
+        mJushou.setVisibility(View.VISIBLE);
+        mPower.setVisibility(View.VISIBLE);
+        mTvTitle.setText("");
+        mStartTime = 0;
+        StudentApplication.mManageDataBean.time = 0;
+        mTvMsg.setVisibility(View.GONE);
+        mTvDate.setVisibility(View.GONE);
+        mComfir.setVisibility(View.GONE);
 
     }
 
     private void setTestData(ManageDataBean.TestBean testBean) {
         if (testBean != null) {
             StudentApplication.sTestBean = testBean;
-            mTvTitle.setText(testBean.getDes());
-            mTvDate.setText(testBean.getDes());
-            mTvTitle.setText(testBean.getDes());
+            if (StudentApplication.mManageDataBean.MODE == COMPETITION) {
+                mTvTitle.setText(testBean.getTitle());
+                mTvDate.setText("竞赛时间：" + Util.getFormatDate(testBean.getTime_start()) + "-" + Util.getFormattime(testBean.getTime_stop()));
+
+                mTvTitle.setText("竞赛要求：" + testBean.getDes());
+            }
+
         }
     }
 
@@ -381,8 +427,14 @@ public class MainActivity extends BaseActivity {
         if (StudentApplication.mManageDataBean.getState_power() != cmd_msg_back.powerState) {
             StudentApplication.mManageDataBean.setState_power(cmd_msg_back.powerState);
             senStateChange();
+            if (StudentApplication.mManageDataBean.getState_power() == 1) {
+                if (StudentApplication.mManageDataBean.MODE.equals(TEST)) {
+
+                }
+            }
 
         }
+
     }
 
     @Override

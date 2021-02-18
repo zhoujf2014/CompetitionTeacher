@@ -35,6 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity implements DataChan
     public TeacherAppService mAppService;
 
     protected boolean isShow;
+    protected boolean isDesdory = false;
     private Handler mHandler = new Handler() {
 
         @Override
@@ -159,14 +160,14 @@ public abstract class BaseActivity extends AppCompatActivity implements DataChan
     }
 
     protected void sendDataToAllClient(ManageDataBean manageDataBean) {
-        if (mAppService!=null) {
+        if (mAppService != null) {
 
             mAppService.sendDataToAllClient(manageDataBean);
         }
     }
 
     protected void sendDataToClient(String SN, ManageDataBean manageDataBean) {
-        if (mAppService!=null) {
+        if (mAppService != null) {
 
             mAppService.sendDataToClient(SN, manageDataBean);
         }
@@ -175,6 +176,7 @@ public abstract class BaseActivity extends AppCompatActivity implements DataChan
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        isDesdory = true;
     }
 
     @Override
@@ -194,6 +196,11 @@ public abstract class BaseActivity extends AppCompatActivity implements DataChan
 
     @Override
     public void notifyData() {
+
+    }
+
+    @Override
+    public void onTimeChange(ManageDataBean manageDataBean) {
 
     }
 }

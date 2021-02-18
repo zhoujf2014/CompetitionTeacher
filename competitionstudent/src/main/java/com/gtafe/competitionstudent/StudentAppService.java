@@ -257,11 +257,16 @@ public class StudentAppService extends Service {
                             int read = mIn.read(bytes);
                             if (read > 10) {
                                 String jsonString = new String(bytes, 0, read);
-                                Log.e(TAG, "run: 收到字符串" + jsonString);
-                                if (jsonString.startsWith("{") && jsonString.endsWith("}")) {
-                                    ManageDataBean userDataBean = gson.fromJson(jsonString, ManageDataBean.class);
-                                    if (userDataBean != null) {
-                                        receivDataFromServer(userDataBean);
+                                Log.e(TAG, "run: "+jsonString );
+                                String[] split = jsonString.split("data=");
+                                for (int i = 0; i < split.length; i++) {
+                                    String data = split[i];
+                                    if (data.startsWith("{") && data.endsWith("}")) {
+
+                                        ManageDataBean userDataBean = gson.fromJson(data, ManageDataBean.class);
+                                        if (userDataBean != null) {
+                                            receivDataFromServer(userDataBean);
+                                        }
                                     }
                                 }
                             }
@@ -337,7 +342,7 @@ public class StudentAppService extends Service {
         }
 
         private void sendData(String data) {
-            data = "data="+data;
+            data = "data=" + data;
             if (mOut != null) {
                 try {
                     mOut.write(data.getBytes());
@@ -513,8 +518,7 @@ public class StudentAppService extends Service {
             super.run();
             Looper.prepare();
             mSendHandler = new Handler() {
-                @SuppressLint("HandlerLeak")
-                @Override
+
                 public void handleMessage(Message msg) {
                     if (mDestroy) {
                         return;

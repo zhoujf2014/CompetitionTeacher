@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.gtafe.competitionlib.ManageDataBean;
 import com.gtafe.competitionlib.SharePrefrenceUtils;
+import com.gtafe.competitionlib.utils.Util;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,6 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.JUSHOU;
+import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.YONGDIAN;
 import static com.gtafe.competitionteacher.MainActivity.mIsSetting;
 import static com.gtafe.competitionteacher.TeacherApplication.sManageDataBeans;
 
@@ -72,7 +74,7 @@ public class CompelitionAdapter extends RecyclerView.Adapter {
     }
 
 
-    class CompelitionViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+    class CompelitionViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
         @BindView(R.id.item_name)
         TextView mItemName;
         @BindView(R.id.item_hand)
@@ -90,7 +92,7 @@ public class CompelitionAdapter extends RecyclerView.Adapter {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnLongClickListener(this);
-
+            itemView.setOnClickListener(this);
         }
 
         @OnClick({R.id.item_hand})
@@ -100,7 +102,7 @@ public class CompelitionAdapter extends RecyclerView.Adapter {
 
                     GtaAlerDialog gtaAlerDialog = new GtaAlerDialog(mMainActivity);
                     gtaAlerDialog.setTitle("举手提问");
-                    gtaAlerDialog.setMessage(mManageDataBean.getBianhao()+"\n举手提问");
+                    gtaAlerDialog.setMessage(mManageDataBean.getBianhao() + "\n举手提问");
                     gtaAlerDialog.setButtonConfir("已知悉");
 
                     gtaAlerDialog.setOnclikLisener(new GtaAlerDialog.OnButtonClickLisener() {
@@ -110,7 +112,7 @@ public class CompelitionAdapter extends RecyclerView.Adapter {
                             manageDataBean.CMD = JUSHOU;
                             manageDataBean.SN = mManageDataBean.SN;
                             manageDataBean.setState_hand(0);
-                            mMainActivity.sendDataToClient(manageDataBean.SN,manageDataBean);
+                            mMainActivity.sendDataToClient(manageDataBean.SN, manageDataBean);
                             mManageDataBean.setState_hand(0);
                             mItemHand.setVisibility(View.INVISIBLE);
                         }
@@ -147,6 +149,7 @@ public class CompelitionAdapter extends RecyclerView.Adapter {
                 case 4:
                     break;
             }
+            mItemTime.setText(Util.getFormatCountDown(mManageDataBean.getTime()));
         }
 
         @Override
@@ -178,6 +181,32 @@ public class CompelitionAdapter extends RecyclerView.Adapter {
             }
 
             return false;
+        }
+
+        @Override
+        public void onClick(View view) {
+            GtaAlerDialog gtaAlerDialog = new GtaAlerDialog(mMainActivity);
+            gtaAlerDialog.setButtonCancle("取消");
+            gtaAlerDialog.setTitle(null, "电源控制");
+
+            gtaAlerDialog.setMsg((mManageDataBean.getState_power() == 1 ? "是否关闭设备电源？" : "是否打开设备电源") + "\n设备SN:" + mManageDataBean.SN + "\n" + "设备编号：" + mManageDataBean.getBianhao());
+            gtaAlerDialog.setButtonConfir("确定");
+            gtaAlerDialog.setOnclikLisener(new GtaAlerDialog.OnButtonClickLisener() {
+                @Override
+                public void OnConfirmButtonClick() {
+                    ManageDataBean manageDataBean = new ManageDataBean();
+                    manageDataBean.CMD = YONGDIAN;
+                    manageDataBean.SN =mManageDataBean.SN;
+                    manageDataBean.setState_power(mManageDataBean.getState_power()^1);
+                    mMainActivity.sendDataToClient(mManageDataBean.SN, manageDataBean);
+                }
+
+                @Override
+                public void OnCancleButtonClick() {
+
+                }
+            });
+            gtaAlerDialog.show();
         }
     }
 }

@@ -38,6 +38,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.TESTDATA;
+import static com.gtafe.competitionteacher.TeacherApplication.sTime;
 
 /**
  * Created by ZhouJF on 2020/11/20.
@@ -177,7 +178,15 @@ public class TeacherAppService extends Service {
     private void interpretWifiData(ManageDataBean manageDataBean) {
         switch (manageDataBean.CMD) {
             case HERAT:
+                if (manageDataBean.getState_connet()!=3) {
+                    manageDataBean.setTime(sTime);
+                }
                 mSendThread.send(manageDataBean.SN, gson.toJson(manageDataBean));
+
+                for (DataChangeInterFace dataChangeInterFace : mDataChangeInterFaces) {
+                    dataChangeInterFace.onTimeChange(manageDataBean);
+
+                }
                 break;
 
             case BIANHAO:
@@ -201,6 +210,9 @@ public class TeacherAppService extends Service {
     }
 
     public void sendDataToClient(String sn, ManageDataBean manageDataBean) {
+        if (manageDataBean.getState_connet()!=3) {
+            manageDataBean.setTime(sTime);
+        }
         mSendThread.send(sn, gson.toJson(manageDataBean));
     }
 
@@ -227,7 +239,7 @@ public class TeacherAppService extends Service {
                             for (int i = 0; i < socketClients.size(); i++) {
                                 socketClients.get(i).sendData((String) msg.obj);
                                 try {
-                                    Thread.sleep(30);
+                                    Thread.sleep(10);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
@@ -331,7 +343,7 @@ public class TeacherAppService extends Service {
                                 if (data.startsWith("{") && data.endsWith("}")) {
                                     ManageDataBean manageDataBean = gson.fromJson(data, ManageDataBean.class);
                                     if (manageDataBean != null) {
-                                        if (this.SN == null) {
+                                        if (this.SN.equals("")) {
                                             this.SN = manageDataBean.SN;
                                             for (ManageDataBean manageDataBean1 : TeacherApplication.sManageDataBeans) {
                                                 if (manageDataBean1.SN.equals(this.SN)) {
@@ -406,7 +418,7 @@ public class TeacherAppService extends Service {
         public void sendData(String data) {
             if (mOut != null) {
                 try {
-                    mOut.write(data.getBytes());
+                    mOut.write(("data=" + data).getBytes());
                 } catch (IOException e) {
                     e.printStackTrace();
                     connect = false;

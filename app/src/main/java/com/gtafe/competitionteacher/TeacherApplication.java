@@ -20,6 +20,8 @@ import java.util.List;
 public class TeacherApplication extends Application {
     public static ManageDataBean.TestBean mTestBean;
     public static List<ManageDataBean> sManageDataBeans;
+    public static ManageDataBean.EMU_MODE sEMU_mode;
+    public static long sTime;
 
     @Override
     public void onCreate() {

@@ -12,4 +12,6 @@ interface DataChangeInterFace {
     void onReceivDataFromServer(ManageDataBean manageDataBean);
 
     void notifyData();
+
+    void onTimeChange(ManageDataBean manageDataBean);
 }

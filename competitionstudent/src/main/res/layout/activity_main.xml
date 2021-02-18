@@ -99,9 +99,9 @@
             android:id="@+id/main_tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_gravity="center_horizontal"
-            android:text="汽车维修操作"
+            android:layout_marginTop="10dp"
+            android:text=""
             android:textColor="@color/text_blue"
             android:textSize="30sp" />
 
@@ -115,7 +115,7 @@
 
             android:drawablePadding="10dp"
             android:gravity="center"
-            android:text="01:50:30"
+            android:text="00:00:00"
             android:textColor="@color/textcolor"
             android:textSize="45sp" />
 

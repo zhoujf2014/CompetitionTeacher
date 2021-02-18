@@ -106,7 +106,7 @@ public class GtaAddCompetitonDialog extends AlertDialog {
 
                             switch (view.getId()) {
                                 case R.id.view_competiton_time_start:
-                                    startTime = date.getTime();
+                                    startTime = date.getTime()/60000*60000;
                                     if (mEndTime == 0 || startTime - mEndTime < 0) {
 
                                         mViewCompetitionStart.setText(Util.getFormatDate(date));
@@ -117,7 +117,7 @@ public class GtaAddCompetitonDialog extends AlertDialog {
 
                                     break;
                                 case R.id.view_competiton_time_end:
-                                    mEndTime = date.getTime();
+                                    mEndTime = date.getTime()/60000*60000+1000;
                                     if (startTime - mEndTime < 0) {
                                         mViewCompetitionEnd.setText(Util.getFormatDate(date));
                                     } else {

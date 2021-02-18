@@ -32,8 +32,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.CHANGEMODE;
+import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.COMPlETE;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.STARTCOMPETITION;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.TESTDATA;
+import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.TIMEALERT;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_CMD.YONGDIAN;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_MODE.COMPETITION;
 import static com.gtafe.competitionlib.ManageDataBean.EMU_MODE.STUDY;
@@ -99,37 +101,38 @@ public class MainActivity extends BaseActivity {
                 case 0:
                     break;
                 case 1:
-
-                    if (mTestBean != null) {
-                        switch (mTestBean.getState()) {
-                            case 0:
-                                break;
-                            case 1:
-                                break;
-                            case 2:
-                                break;
-                            case 3:
-                                break;
-                            case 4:
-                                long time_start = mTestBean.getTime_start();
-
-                                if (time_start - System.currentTimeMillis() < 0) {
-                                    mManageDataBean = new ManageDataBean();
-                                    mManageDataBean.CMD = STARTCOMPETITION;
-                                    mManageDataBean.setTestBean(mTestBean);
-                                    sendDataToAllClient(mManageDataBean);
+                    if (mEmu_mode == COMPETITION) {
+                        if (mTestBean != null) {
+                            long date_start = mTestBean.getTime_start();
+                            long time_start = System.currentTimeMillis() - date_start;
+                            long date_end = mTestBean.getTime_stop();
+                            long time_end = date_end - System.currentTimeMillis();
+                            if (time_start > -1 && time_end >-1) {
+                                TeacherApplication.sTime = time_start;
+                                for (ManageDataBean manageDataBean : sManageDataBeans) {
+                                    if (manageDataBean.getState_connet() != 3) {
+                                        manageDataBean.setTime(time_start);
+                                        mCompelitionAdapter.notifyDataSetChanged();
+                                    }
                                 }
-                                break;
-                            case 5:
-                                break;
-                            case 6:
-                                break;
-                            case 7:
-                                break;
+                                if (!mSendAler && time_end < 10 * 60 * 1000) {
+                                    ManageDataBean manageDataBean = new ManageDataBean();
+                                    manageDataBean.CMD = TIMEALERT;
+                                    manageDataBean.setMSG("距离竞赛结束还有10分钟");
+                                    sendDataToAllClient(manageDataBean);
+                                    mSendAler = true;
+                                }
+                            } else if (time_end < -1 && time_end > -2000) {
+                                mSendAler = false;
+                                ManageDataBean manageDataBean = new ManageDataBean();
+                                manageDataBean.CMD = COMPlETE;
+                                manageDataBean.setMSG("竞赛结束");
+                                sendDataToAllClient(manageDataBean);
+
+                            }
                         }
-
-
                     }
+
                     break;
                 case 2:
                     break;
@@ -146,6 +149,7 @@ public class MainActivity extends BaseActivity {
 
     public GtaAddCompetitonDialog mGtaAddCompetitonDialog;
     public ManageDataBean.EMU_MODE mEmu_mode;
+    public boolean mSendAler;
 
     @Override
     protected void init() {
@@ -171,6 +175,7 @@ public class MainActivity extends BaseActivity {
         mCompelitionAdapter.setData(sManageDataBeans);
         initCompetition();
         initTimeThread();
+        changeModeStudy();
     }
 
     private void initCompetition() {
@@ -197,7 +202,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void run() {
                 super.run();
-                while (true) {
+                while (!isDesdory) {
 
                     try {
                         Thread.sleep(999);
@@ -260,6 +265,31 @@ public class MainActivity extends BaseActivity {
             mGtaAlerDialog.show();
         } else {
             GtaToast.toastOne(mContext, "添加设备需要管理员账号登录");
+        }
+    }
+
+    @Override
+    public void onTimeChange(ManageDataBean userDataBean) {
+        if (mEmu_mode != COMPETITION) {
+
+            ManageDataBean singleManageBean = getSingleManageBean(userDataBean);
+            if (singleManageBean != null) {
+                singleManageBean.setTime(userDataBean.getTime());
+                singleManageBean.setState_power(userDataBean.getState_power());
+                singleManageBean.setState_connet(userDataBean.getState_connet());
+                mCompelitionAdapter.notifyDataSetChanged();
+
+                if (singleManageBean.MODE != mEmu_mode) {
+                    ManageDataBean manageDataBean = new ManageDataBean();
+                    manageDataBean.CMD = CHANGEMODE;
+                    manageDataBean.MODE = mEmu_mode;
+                    if (mTestBean != null) {
+                        manageDataBean.setTestBean(mTestBean);
+                    }
+                    sendDataToAllClient(manageDataBean);
+                    initCompetition();
+                }
+            }
         }
     }
 
@@ -360,6 +390,14 @@ public class MainActivity extends BaseActivity {
                         mTestBean = testBean;
                         SharePrefrenceUtils.putString(mContext, Constant.CompetitionBean, new Gson().toJson(mTestBean));
                         initCompetition();
+                        TeacherApplication.sTime = 0;
+                        mSendAler = false;
+                        for (ManageDataBean manageDataBean : sManageDataBeans) {
+                            if (manageDataBean.getState_connet() != 3) {
+                                manageDataBean.setTime(0);
+                                mCompelitionAdapter.notifyDataSetChanged();
+                            }
+                        }
                     }
 
                     @Override
@@ -401,19 +439,81 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS)); //直接进入手机中的wifi网络设置界面
                 break;
             case R.id.main_back:
-                finish();
+                if (mGtaAlerDialog != null && mGtaAlerDialog.isShowing()) {
+                    mGtaAlerDialog.cancel();
+                }
+                mGtaAlerDialog = new GtaAlerDialog(mContext);
+                mGtaAlerDialog.setButtonCancle("取消");
+                mGtaAlerDialog.setTitle(null, "提示");
+
+                mGtaAlerDialog.setMsg("是否退出？");
+                mGtaAlerDialog.setButtonConfir("确定");
+                mGtaAlerDialog.setOnclikLisener(new GtaAlerDialog.OnButtonClickLisener() {
+                    @Override
+                    public void OnConfirmButtonClick() {
+                        finish();
+                    }
+
+                    @Override
+                    public void OnCancleButtonClick() {
+
+                    }
+                });
+                mGtaAlerDialog.show();
+
                 break;
             case R.id.open_all:
-                manageDataBean = new ManageDataBean();
-                manageDataBean.CMD = YONGDIAN;
-                manageDataBean.setState_power(1);
-                sendDataToAllClient(manageDataBean);
+                if (mGtaAlerDialog != null && mGtaAlerDialog.isShowing()) {
+                    mGtaAlerDialog.cancel();
+                }
+                mGtaAlerDialog = new GtaAlerDialog(mContext);
+                mGtaAlerDialog.setButtonCancle("取消");
+                mGtaAlerDialog.setTitle(null, "提示");
+
+                mGtaAlerDialog.setMsg("是否打开全部设备电源？");
+                mGtaAlerDialog.setButtonConfir("确定");
+                mGtaAlerDialog.setOnclikLisener(new GtaAlerDialog.OnButtonClickLisener() {
+                    @Override
+                    public void OnConfirmButtonClick() {
+                        ManageDataBean manageDataBean = new ManageDataBean();
+                        manageDataBean.CMD = YONGDIAN;
+                        manageDataBean.setState_power(1);
+                        sendDataToAllClient(manageDataBean);
+                    }
+
+                    @Override
+                    public void OnCancleButtonClick() {
+
+                    }
+                });
+                mGtaAlerDialog.show();
+
                 break;
             case R.id.close_all:
-                manageDataBean = new ManageDataBean();
-                manageDataBean.CMD = YONGDIAN;
-                manageDataBean.setState_power(0);
-                sendDataToAllClient(manageDataBean);
+                if (mGtaAlerDialog != null && mGtaAlerDialog.isShowing()) {
+                    mGtaAlerDialog.cancel();
+                }
+                mGtaAlerDialog = new GtaAlerDialog(mContext);
+                mGtaAlerDialog.setButtonCancle("取消");
+                mGtaAlerDialog.setTitle(null, "提示");
+
+                mGtaAlerDialog.setMsg("是否关闭全部设备电源？");
+                mGtaAlerDialog.setButtonConfir("确定");
+                mGtaAlerDialog.setOnclikLisener(new GtaAlerDialog.OnButtonClickLisener() {
+                    @Override
+                    public void OnConfirmButtonClick() {
+                        ManageDataBean manageDataBean = new ManageDataBean();
+                        manageDataBean.CMD = YONGDIAN;
+                        manageDataBean.setState_power(0);
+                        sendDataToAllClient(manageDataBean);
+                    }
+
+                    @Override
+                    public void OnCancleButtonClick() {
+
+                    }
+                });
+                mGtaAlerDialog.show();
                 break;
         }
     }
@@ -557,6 +657,14 @@ public class MainActivity extends BaseActivity {
                     manageDataBean.CMD = TESTDATA;
                     manageDataBean.setTestBean(TeacherApplication.mTestBean);
                     sendDataToClient(manageDataBean.SN, manageDataBean);
+                }
+                break;
+            case COMPlETE:
+
+                singleManageBean = getSingleManageBean(userDataBean);
+                if (singleManageBean != null) {
+                    singleManageBean.setState_connet(userDataBean.getState_connet());
+
                 }
                 break;
         }

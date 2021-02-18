@@ -84,8 +84,11 @@ public class GtaAlerDialog extends AlertDialog {
 
         public void setTitle(Drawable icon, String title) {
             mDialogConnectTitle.setText(title);
-            icon.setBounds(0, 0, 120,120);
-            mDialogConnectTitle.setCompoundDrawables(icon,null,null,null);
+            if (icon!=null) {
+                icon.setBounds(0, 0, 120,120);
+                mDialogConnectTitle.setCompoundDrawables(icon,null,null,null);
+            }
+
         }
 
         public void setMsg(String msg) {
