@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 
 
 /**
- * Created by ZhouJF on 2018/4/7.
+ * Created by ZhouJF on 2018/4/7.  、
  */
 
 public abstract class BaseActivity extends AppCompatActivity implements DataChangeInterFace {
