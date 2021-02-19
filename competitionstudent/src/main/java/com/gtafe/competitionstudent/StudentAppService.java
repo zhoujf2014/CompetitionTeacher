@@ -38,7 +38,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import static com.gtafe.competitionstudent.StudentApplication.Bianhao;
 import static com.gtafe.competitionstudent.StudentApplication.mManageDataBean;
 
 /**
@@ -56,6 +55,7 @@ public class StudentAppService extends Service {
     public SocketThread mSocketThread;
     public Context mContext;
     public SerialPortThread mSerialPortThread;
+    public SendThread mSendThread;
 
     @Override
     public void onCreate() {
@@ -75,8 +75,8 @@ public class StudentAppService extends Service {
 
         String ip = getSharedPreferences(Constant.PACKGE, MODE_PRIVATE).getString(Constant.CENTER_IP, "10.2.8.22");
         connetServer(ip);
-        SendThread sendThread = new SendThread();
-        sendThread.start();
+        mSendThread = new SendThread();
+        mSendThread.start();
 
         mSerialPortThread = new SerialPortThread();
         mSerialPortThread.start();
@@ -177,15 +177,15 @@ public class StudentAppService extends Service {
             manageDataBean.SN = StudentApplication.SN;
             manageDataBean.CMD = ManageDataBean.EMU_CMD.BIANHAO;
             manageDataBean.setBianhao(bianhao);
-            mSocketThread.sendData(gson.toJson(manageDataBean));
+            mSendThread.sendData(gson.toJson(manageDataBean));
             SharePrefrenceUtils.putString(mContext, Constant.BIANHAO, bianhao);
-            Bianhao = bianhao;
+            mManageDataBean.setBianhao(bianhao);
         }
     }
 
     public void sendDataToServer(ManageDataBean manageDataBean) {
         if (mSocketThread != null) {
-            mSocketThread.sendData(gson.toJson(manageDataBean));
+            mSendThread.sendData(gson.toJson(manageDataBean));
         }
     }
 
@@ -257,7 +257,7 @@ public class StudentAppService extends Service {
                             int read = mIn.read(bytes);
                             if (read > 10) {
                                 String jsonString = new String(bytes, 0, read);
-                                Log.e(TAG, "run: "+jsonString );
+                                Log.e(TAG, "run: " + jsonString);
                                 String[] split = jsonString.split("data=");
                                 for (int i = 0; i < split.length; i++) {
                                     String data = split[i];
@@ -543,6 +543,7 @@ public class StudentAppService extends Service {
                         case 1:
                             break;
                         case 2:
+                            mSocketThread.sendData((String) msg.obj);
                             break;
                     }
                 }
@@ -564,6 +565,15 @@ public class StudentAppService extends Service {
             if (mSendHandler != null) {
                 Message message = mSendHandler.obtainMessage();
                 message.what = 0;
+                mSendHandler.sendMessageDelayed(message, 1000);
+            }
+        }
+
+        public void sendData(String data) {
+            if (mSendHandler != null) {
+                Message message = mSendHandler.obtainMessage();
+                message.what = 2;
+                message.obj = data;
                 mSendHandler.sendMessageDelayed(message, 1000);
             }
         }

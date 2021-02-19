@@ -22,7 +22,7 @@ import android_serialport_api.SerialPortFinder;
 public class StudentApplication extends Application {
     private static final String TAG = "StudentApplication";
 
-    public static String Bianhao;
+
     public static String SN;
 
     public static SerialPort mSerialPort;

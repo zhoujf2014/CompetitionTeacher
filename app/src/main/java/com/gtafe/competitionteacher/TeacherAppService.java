@@ -178,7 +178,7 @@ public class TeacherAppService extends Service {
     private void interpretWifiData(ManageDataBean manageDataBean) {
         switch (manageDataBean.CMD) {
             case HERAT:
-                if (manageDataBean.getState_connet()!=3) {
+                if (manageDataBean.MODE == ManageDataBean.EMU_MODE.COMPETITION && manageDataBean.getState_connet() != 3) {
                     manageDataBean.setTime(sTime);
                 }
                 mSendThread.send(manageDataBean.SN, gson.toJson(manageDataBean));
@@ -210,7 +210,7 @@ public class TeacherAppService extends Service {
     }
 
     public void sendDataToClient(String sn, ManageDataBean manageDataBean) {
-        if (manageDataBean.getState_connet()!=3) {
+        if (manageDataBean.getState_connet() != 3) {
             manageDataBean.setTime(sTime);
         }
         mSendThread.send(sn, gson.toJson(manageDataBean));
@@ -313,7 +313,6 @@ public class TeacherAppService extends Service {
             InetAddress address = socket.getInetAddress();
             host = address.getHostAddress();
             Log.e(TAG, "ClientHandler: " + address);
-            addOut(this);
 
 
         }
@@ -353,6 +352,8 @@ public class TeacherAppService extends Service {
                                                 }
                                                 senTestData(manageDataBean1);
                                             }
+                                            remove(SN);
+                                            addOut(this);
                                         }
                                         Message message = mHandler.obtainMessage();
                                         message.what = 3;
@@ -444,6 +445,19 @@ public class TeacherAppService extends Service {
 
     private synchronized void addOut(SocketClient socketClient) {
         socketClients.add(socketClient);
+
+    }
+
+    private synchronized void remove(String SN) {
+        for (int i = 0; i < socketClients.size(); i++) {
+            SocketClient socketClient = socketClients.get(i);
+            if (socketClient.SN.equals(SN)) {
+                socketClients.remove(i);
+                socketClient.connect = false;
+                i--;
+            }
+        }
+
 
     }
 

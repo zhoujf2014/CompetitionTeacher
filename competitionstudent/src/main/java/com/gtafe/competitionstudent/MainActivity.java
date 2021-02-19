@@ -68,8 +68,11 @@ public class MainActivity extends BaseActivity {
                     break;
                 case 1:
                     if (StudentApplication.mManageDataBean.MODE == COMPETITION) {
-                        mTvTime.setText(Util.getFormatCountDown(StudentApplication.mManageDataBean.time));
-                        StudentApplication.mManageDataBean.setState_connet(2);
+                        if (StudentApplication.mManageDataBean.getState_connet()!=3) {
+
+                            mTvTime.setText(Util.getFormatCountDown(StudentApplication.mManageDataBean.time));
+                        }
+                        //StudentApplication.mManageDataBean.setState_connet(2);
                     } else {
 
                         if (StudentApplication.mManageDataBean.getState_power() == 1) {
@@ -77,13 +80,13 @@ public class MainActivity extends BaseActivity {
                                 mStartTime = System.currentTimeMillis();
                             }
                             StudentApplication.mManageDataBean.setTime(System.currentTimeMillis() - mStartTime);
-                            StudentApplication.mManageDataBean.setState_connet(2);
+                           // StudentApplication.mManageDataBean.setState_connet(2);
                             mTvTime.setText(Util.getFormatCountDown(StudentApplication.mManageDataBean.time));
                         } else {
                             mTvTime.setText("00:00:00");
                             mStartTime = 0;
                             StudentApplication.mManageDataBean.time = 0;
-                            StudentApplication.mManageDataBean.setState_connet(1);
+                            //StudentApplication.mManageDataBean.setState_connet(1);
                         }
                     }
                     break;
@@ -105,7 +108,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void init() {
         mTvSn.setText("设备SN：" + StudentApplication.SN);
-        mTvBianhao.setText("设备编号：" + StudentApplication.Bianhao);
+        mTvBianhao.setText("设备编号：" + StudentApplication.mManageDataBean.getBianhao());
         initTimeThread();
         modeStudy();
 
@@ -263,7 +266,9 @@ public class MainActivity extends BaseActivity {
         view.startAnimation(animation2);
         return view.getId();
     }
+
     GtaAlerDialog mPixAlerDialog;
+
     @Override
     public void onReceivDataFromServer(ManageDataBean userDataBean) {
 
@@ -329,7 +334,7 @@ public class MainActivity extends BaseActivity {
 
                 break;
             case TIMEALERT:
-                if (mPixAlerDialog!=null&&mPixAlerDialog.isShowing()) {
+                if (mPixAlerDialog != null && mPixAlerDialog.isShowing()) {
                     mPixAlerDialog.cancel();
                 }
                 mPixAlerDialog = new GtaAlerDialog(mContext);
@@ -351,7 +356,7 @@ public class MainActivity extends BaseActivity {
                 mPixAlerDialog.show();
                 break;
             case COMPlETE:
-                if (mPixAlerDialog!=null&&mPixAlerDialog.isShowing()) {
+                if (mPixAlerDialog != null && mPixAlerDialog.isShowing()) {
                     mPixAlerDialog.cancel();
                 }
                 StudentApplication.mManageDataBean.setState_connet(3);
@@ -381,7 +386,7 @@ public class MainActivity extends BaseActivity {
 
                 break;
             case HERAT:
-                if (StudentApplication.mManageDataBean.MODE == COMPETITION) {
+                if (StudentApplication.mManageDataBean.MODE == COMPETITION && StudentApplication.mManageDataBean.getState_connet() != 3) {
 
                     StudentApplication.mManageDataBean.setTime(userDataBean.getTime());
                 }
@@ -413,7 +418,7 @@ public class MainActivity extends BaseActivity {
                 mTvTitle.setText(testBean.getTitle());
                 mTvDate.setText("竞赛时间：" + Util.getFormatDate(testBean.getTime_start()) + "-" + Util.getFormattime(testBean.getTime_stop()));
 
-                mTvTitle.setText("竞赛要求：" + testBean.getDes());
+                mTvMsg.setText("竞赛要求：" + testBean.getDes());
             }
 
         }

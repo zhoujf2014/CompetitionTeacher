@@ -17,7 +17,7 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
             Log.e(TAG, "onReceive: android.intent.action.BOOT_COMPLETED" );
             Intent intent1 = new Intent(context, SplashActivity.class);
             intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent1);
+          //  context.startActivity(intent1);
         }
 
     }

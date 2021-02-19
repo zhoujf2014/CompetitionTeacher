@@ -217,6 +217,7 @@
             android:layout_height="wrap_content"
             android:drawableTop="@mipmap/tuichu"
             android:text="退出"
+            android:gravity="center_horizontal"
             android:textColor="#FFFFFF" />
 
         <LinearLayout

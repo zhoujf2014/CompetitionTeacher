@@ -272,6 +272,16 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onTimeChange(ManageDataBean userDataBean) {
+        if (userDataBean.MODE != mEmu_mode) {
+            ManageDataBean manageDataBean = new ManageDataBean();
+            manageDataBean.CMD = CHANGEMODE;
+            manageDataBean.MODE = mEmu_mode;
+            if (mTestBean != null) {
+                manageDataBean.setTestBean(mTestBean);
+            }
+            sendDataToAllClient(manageDataBean);
+            initCompetition();
+        }
         if (mEmu_mode != COMPETITION) {
 
             ManageDataBean singleManageBean = getSingleManageBean(userDataBean);
@@ -281,16 +291,7 @@ public class MainActivity extends BaseActivity {
                 singleManageBean.setState_connet(userDataBean.getState_connet());
                 mCompelitionAdapter.notifyDataSetChanged();
 
-                if (singleManageBean.MODE != mEmu_mode) {
-                    ManageDataBean manageDataBean = new ManageDataBean();
-                    manageDataBean.CMD = CHANGEMODE;
-                    manageDataBean.MODE = mEmu_mode;
-                    if (mTestBean != null) {
-                        manageDataBean.setTestBean(mTestBean);
-                    }
-                    sendDataToAllClient(manageDataBean);
-                    initCompetition();
-                }
+
             }
         }
     }
@@ -542,7 +543,6 @@ public class MainActivity extends BaseActivity {
         drawable.setBounds(0, 0, bounds, bounds);
         mBtCompetition.setCompoundDrawables(null, drawable, null, null);
 
-
         manageDataBean = new ManageDataBean();
         manageDataBean.CMD = CHANGEMODE;
         manageDataBean.MODE = TEST;
@@ -581,7 +581,7 @@ public class MainActivity extends BaseActivity {
 
     private void changeCompelition(ManageDataBean.EMU_MODE emu_mode) {
         for (ManageDataBean manageDataBean : sManageDataBeans) {
-        manageDataBean.MODE = emu_mode;
+            manageDataBean.MODE = emu_mode;
         }
     }
 

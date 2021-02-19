@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.gtafe.competitionstudent.StudentApplication.Bianhao;
+import static com.gtafe.competitionstudent.StudentApplication.mManageDataBean;
 
 public class SettingActivity extends BaseActivity {
 
@@ -44,7 +44,7 @@ public class SettingActivity extends BaseActivity {
         mIp = getSharedPreferences(Constant.PACKGE, MODE_PRIVATE).getString(Constant.CENTER_IP, "10.2.8.22");
         mEtIp.setText(mIp);
         mTvIp.setText("教师端IP:" + mIp);
-        mBianhao.setText(Bianhao);
+    mBianhao.setText(mManageDataBean.getBianhao());
     }
 
     @Override
@@ -93,6 +93,7 @@ public class SettingActivity extends BaseActivity {
                 }
                 if (mAppService != null) {
                     mAppService.sendBianhao(bianhao);
+
                 }
                 break;
 

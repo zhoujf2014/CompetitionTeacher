@@ -96,7 +96,7 @@ public abstract class BaseActivity extends AppCompatActivity implements DataChan
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                 mAppService = ((StudentAppService.LocalBinder) iBinder).getService();
                 mAppService.addDataChangeInterFace(BaseActivity.this);
-                getTestData();
+             //   getTestData();
             }
 
             @Override
