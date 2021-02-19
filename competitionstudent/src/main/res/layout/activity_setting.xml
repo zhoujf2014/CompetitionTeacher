@@ -31,15 +31,17 @@
         <TextView
             android:id="@+id/setting_sn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:text="设备SN：124564154531"
             android:textSize="@dimen/setting_text_size"
             android:textColor="@color/tv_color" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
 
             <EditText
                 android:id="@+id/setting_et_ip"
@@ -69,8 +71,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+           >
 
 
             <TextView
@@ -103,8 +106,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
 
             <EditText

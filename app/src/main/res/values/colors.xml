@@ -10,5 +10,9 @@
     <color name="textcolor">#333333</color>
     <color name="mode_yellow">#FFC107</color>
     <color name="grally">#AADAD8D2</color>
+    <color name="textcolor_unconnect">#DAD8D2</color>
+    <color name="textcolor_connect">#333333</color>
+    <color name="textcolor_testing">#2A8AD7</color>
+    <color name="textcolor_testend">#1BBF0E</color>
 
 </resources>

@@ -30,7 +30,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:singleLine="true"
                 android:text="A1"
+                android:textColor="@color/textcolor_unconnect"
                 android:textSize="20sp" />
 
             <ImageView
@@ -43,32 +45,37 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_marginLeft="5dp"
                 android:id="@+id/item_power"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:src="@mipmap/dianyaun" />
 
             <TextView
                 android:id="@+id/item_state"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:singleLine="true"
                 android:text="比赛中"
+                android:textColor="@color/textcolor_unconnect"
                 android:textSize="15sp" />
         </RelativeLayout>
 
 
         <TextView
             android:id="@+id/item_time"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:singleLine="true"
             android:text="00:00:00"
+            android:textColor="@color/textcolor_unconnect"
             android:textSize="15sp" />
     </LinearLayout>
 

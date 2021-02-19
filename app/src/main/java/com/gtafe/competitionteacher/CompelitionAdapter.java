@@ -1,5 +1,6 @@
 package com.gtafe.competitionteacher;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -85,6 +86,7 @@ public class CompelitionAdapter extends RecyclerView.Adapter {
         TextView mItemState;
         @BindView(R.id.item_time)
         TextView mItemTime;
+        View mView ;
         public ManageDataBean mManageDataBean;
 
 
@@ -93,6 +95,7 @@ public class CompelitionAdapter extends RecyclerView.Adapter {
             ButterKnife.bind(this, itemView);
             itemView.setOnLongClickListener(this);
             itemView.setOnClickListener(this);
+            mView= itemView;
         }
 
         @OnClick({R.id.item_hand})
@@ -128,6 +131,7 @@ public class CompelitionAdapter extends RecyclerView.Adapter {
 
         }
 
+
         public void setData(int position) {
             mManageDataBean = mManageDataBeans.get(position);
             mItemName.setText(mManageDataBean.getBianhao());
@@ -136,15 +140,28 @@ public class CompelitionAdapter extends RecyclerView.Adapter {
             switch (mManageDataBean.getState_connet()) {
                 case 0:
                     mItemState.setText("未连接");
+
+                    mItemName.setTextColor(mMainActivity.getResources().getColor(R.color.textcolor_unconnect));
+                    mItemState.setTextColor(mMainActivity.getResources().getColor(R.color.textcolor_unconnect));
+                    mItemTime.setTextColor(mMainActivity.getResources().getColor(R.color.textcolor_unconnect));
                     break;
                 case 1:
                     mItemState.setText("已连接");
+                    mItemName.setTextColor(mMainActivity.getResources().getColor(R.color.textcolor_connect));
+                    mItemState.setTextColor(mMainActivity.getResources().getColor(R.color.textcolor_connect));
+                    mItemTime.setTextColor(mMainActivity.getResources().getColor(R.color.textcolor_connect));
                     break;
                 case 2:
                     mItemState.setText("训练中");
+                    mItemName.setTextColor(mMainActivity.getResources().getColor(R.color.textcolor_testing));
+                    mItemState.setTextColor(mMainActivity.getResources().getColor(R.color.textcolor_testing));
+                    mItemTime.setTextColor(mMainActivity.getResources().getColor(R.color.textcolor_testing));
                     break;
                 case 3:
                     mItemState.setText("训练结束");
+                    mItemName.setTextColor(mMainActivity.getResources().getColor(R.color.textcolor_testend));
+                    mItemState.setTextColor(mMainActivity.getResources().getColor(R.color.textcolor_testend));
+                    mItemTime.setTextColor(mMainActivity.getResources().getColor(R.color.textcolor_testend));
                     break;
                 case 4:
                     break;

@@ -93,11 +93,15 @@ public class SerialPortFinder {
             itdriv = getDrivers().iterator();
             while (itdriv.hasNext()) {
                 Driver driver = itdriv.next();
-                Iterator<File> itdev = driver.getDevices().iterator();
-                while (itdev.hasNext()) {
-                    String device = itdev.next().getName();
-                    String value = String.format("%s (%s)", device, driver.getName());
-                    devices.add(value);
+                Vector<File> devices1 = driver.getDevices();
+                if (devices1!=null) {
+
+                    Iterator<File> itdev = devices1.iterator();
+                    while (itdev.hasNext()) {
+                        String device = itdev.next().getName();
+                        String value = String.format("%s (%s)", device, driver.getName());
+                        devices.add(value);
+                    }
                 }
             }
         } catch (IOException e) {

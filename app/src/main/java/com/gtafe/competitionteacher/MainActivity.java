@@ -107,7 +107,7 @@ public class MainActivity extends BaseActivity {
                             long time_start = System.currentTimeMillis() - date_start;
                             long date_end = mTestBean.getTime_stop();
                             long time_end = date_end - System.currentTimeMillis();
-                            if (time_start > -1 && time_end >-1) {
+                            if (time_start > -1 && time_end > -1) {
                                 TeacherApplication.sTime = time_start;
                                 for (ManageDataBean manageDataBean : sManageDataBeans) {
                                     if (manageDataBean.getState_connet() != 3) {
@@ -221,7 +221,9 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onAddnewBianhao(ManageDataBean manageDataBean) {
         if (mIsSetting) {
-
+            if (isDesdory) {
+                return;
+            }
             if (mGtaAlerDialog != null && mGtaAlerDialog.isShowing()) {
                 mGtaAlerDialog.cancel();
             }
@@ -545,6 +547,8 @@ public class MainActivity extends BaseActivity {
         manageDataBean.CMD = CHANGEMODE;
         manageDataBean.MODE = TEST;
         sendDataToAllClient(manageDataBean);
+        changeCompelition(TEST);
+
     }
 
     private void changeModeStudy() {
@@ -572,11 +576,18 @@ public class MainActivity extends BaseActivity {
         manageDataBean.CMD = CHANGEMODE;
         manageDataBean.MODE = STUDY;
         sendDataToAllClient(manageDataBean);
+        changeCompelition(STUDY);
+    }
+
+    private void changeCompelition(ManageDataBean.EMU_MODE emu_mode) {
+        for (ManageDataBean manageDataBean : sManageDataBeans) {
+        manageDataBean.MODE = emu_mode;
+        }
     }
 
     private void changeModeCompetition() {
         mEmu_mode = COMPETITION;
-
+        changeCompelition(COMPETITION);
         Drawable drawable;
         mBtTest.setTextColor(getResources().getColor(R.color.white));
         mBtStudy.setTextColor(getResources().getColor(R.color.white));

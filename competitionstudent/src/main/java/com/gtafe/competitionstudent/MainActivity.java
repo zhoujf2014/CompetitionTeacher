@@ -69,7 +69,7 @@ public class MainActivity extends BaseActivity {
                 case 1:
                     if (StudentApplication.mManageDataBean.MODE == COMPETITION) {
                         mTvTime.setText(Util.getFormatCountDown(StudentApplication.mManageDataBean.time));
-
+                        StudentApplication.mManageDataBean.setState_connet(2);
                     } else {
 
                         if (StudentApplication.mManageDataBean.getState_power() == 1) {
@@ -77,12 +77,13 @@ public class MainActivity extends BaseActivity {
                                 mStartTime = System.currentTimeMillis();
                             }
                             StudentApplication.mManageDataBean.setTime(System.currentTimeMillis() - mStartTime);
-
+                            StudentApplication.mManageDataBean.setState_connet(2);
                             mTvTime.setText(Util.getFormatCountDown(StudentApplication.mManageDataBean.time));
                         } else {
                             mTvTime.setText("00:00:00");
                             mStartTime = 0;
                             StudentApplication.mManageDataBean.time = 0;
+                            StudentApplication.mManageDataBean.setState_connet(1);
                         }
                     }
                     break;
@@ -353,6 +354,7 @@ public class MainActivity extends BaseActivity {
                 if (mPixAlerDialog!=null&&mPixAlerDialog.isShowing()) {
                     mPixAlerDialog.cancel();
                 }
+                StudentApplication.mManageDataBean.setState_connet(3);
                 mPixAlerDialog = new GtaAlerDialog(mContext);
                 mPixAlerDialog.setMsg("竞赛时间已经用完，");
                 mPixAlerDialog.setTitle(null, "竞赛结束");
@@ -452,10 +454,12 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onConnectStateChange(boolean state) {
         if (state) {
+            StudentApplication.mManageDataBean.setState_connet(1);
             mTvConnectState.setText("已连接");
             mTvConnectState.setTextColor(getResources().getColor(R.color.text_green));
         } else {
             mTvConnectState.setText("未连接");
+            StudentApplication.mManageDataBean.setState_connet(0);
             mTvConnectState.setTextColor(getResources().getColor(R.color.textcolor));
 
         }
