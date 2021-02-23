@@ -282,6 +282,7 @@ public class MainActivity extends BaseActivity {
             sendDataToAllClient(manageDataBean);
             initCompetition();
         }
+        //
         ManageDataBean singleManageBean = getSingleManageBean(userDataBean);
         if (mEmu_mode != COMPETITION) {
             if (singleManageBean != null) {
