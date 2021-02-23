@@ -285,11 +285,14 @@ public class MainActivity extends BaseActivity {
                         StudentApplication.mManageDataBean.MODE = COMPETITION;
 
                         mMode.setText("竞赛模式");
+                        mJushou.clearAnimation();
+                        mPower.clearAnimation();
                         mJushou.setVisibility(View.GONE);
                         mPower.setVisibility(View.GONE);
                         mTvMsg.setVisibility(View.VISIBLE);
                         mTvDate.setVisibility(View.VISIBLE);
                         mComfir.setVisibility(View.VISIBLE);
+
                         mTvTitle.setText("");
                         mStartTime = 0;
                         StudentApplication.mManageDataBean.time = 0;
@@ -302,6 +305,7 @@ public class MainActivity extends BaseActivity {
                         mMode.setText("训练模式");
                         mStartTime = 0;
                         StudentApplication.mManageDataBean.time = 0;
+                        mJushou.clearAnimation();
                         mJushou.setVisibility(View.GONE);
                         mPower.setVisibility(View.VISIBLE);
                         StudentApplication.mManageDataBean.MODE = TEST;
