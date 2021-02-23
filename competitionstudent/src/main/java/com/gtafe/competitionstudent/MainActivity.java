@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity {
                     break;
                 case 1:
                     if (StudentApplication.mManageDataBean.MODE == COMPETITION) {
-                        if (StudentApplication.mManageDataBean.getState_connet()!=3) {
+                        if (StudentApplication.mManageDataBean.getState_connet() != 3) {
 
                             mTvTime.setText(Util.getFormatCountDown(StudentApplication.mManageDataBean.time));
                         }
@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity {
                                 mStartTime = System.currentTimeMillis();
                             }
                             StudentApplication.mManageDataBean.setTime(System.currentTimeMillis() - mStartTime);
-                           // StudentApplication.mManageDataBean.setState_connet(2);
+                            // StudentApplication.mManageDataBean.setState_connet(2);
                             mTvTime.setText(Util.getFormatCountDown(StudentApplication.mManageDataBean.time));
                         } else {
                             mTvTime.setText("00:00:00");
@@ -184,7 +184,7 @@ public class MainActivity extends BaseActivity {
                             byte[] pack = cmd_msg_cmd.pack();
                             mAppService.sendDataToSerial(pack);
 
-                            StudentApplication.mManageDataBean.setState_power(0);
+                            // StudentApplication.mManageDataBean.setState_power(0);
                         }
 
                         @Override
@@ -209,7 +209,7 @@ public class MainActivity extends BaseActivity {
                                 cmd_msg_cmd.powerState = 1;
                                 byte[] pack = cmd_msg_cmd.pack();
                                 mAppService.sendDataToSerial(pack);
-                                StudentApplication.mManageDataBean.setState_power(1);
+                                //StudentApplication.mManageDataBean.setState_power(1);
 
                             }
 
@@ -223,7 +223,7 @@ public class MainActivity extends BaseActivity {
                         StudentApplication.mManageDataBean.CMD = YONGDIAN;
                         mAppService.sendDataToServer(StudentApplication.mManageDataBean);
                         startButtonAnimation(mPower);
-                        StudentApplication.mManageDataBean.setState_power(1);
+                        //StudentApplication.mManageDataBean.setState_power(1);
 
                     }
 
@@ -290,7 +290,7 @@ public class MainActivity extends BaseActivity {
                         mTvMsg.setVisibility(View.VISIBLE);
                         mTvDate.setVisibility(View.VISIBLE);
                         mComfir.setVisibility(View.VISIBLE);
-
+                        mTvTitle.setText("");
                         mStartTime = 0;
                         StudentApplication.mManageDataBean.time = 0;
                         setTestData(StudentApplication.mManageDataBean.getTestBean());
@@ -312,6 +312,10 @@ public class MainActivity extends BaseActivity {
                         }
                         mTvMsg.setVisibility(View.GONE);
                         mTvDate.setVisibility(View.GONE);
+
+
+
+
                         break;
                 }
                 break;
@@ -408,7 +412,6 @@ public class MainActivity extends BaseActivity {
         mTvMsg.setVisibility(View.GONE);
         mTvDate.setVisibility(View.GONE);
         mComfir.setVisibility(View.GONE);
-
     }
 
     private void setTestData(ManageDataBean.TestBean testBean) {
@@ -429,8 +432,8 @@ public class MainActivity extends BaseActivity {
 
         //mAppService.sendDataToSerial(cmd_msg_cmd.pack());
         mTvDianya.setText(String.format("设备电压：%sV", (int) (cmd_msg_back.dianya / 10000f)));
-        mTvDianliu.setText(String.format("设备电流：%sA", cmd_msg_back.dianliu / 10000f));
-        mTvGonglv.setText(String.format("设备功率：%sW", cmd_msg_back.gonglv / 10000f));
+        mTvDianliu.setText(String.format("设备电流：%sA", cmd_msg_back.dianliu / 100 / 100f));
+        mTvGonglv.setText(String.format("设备功率：%sW", cmd_msg_back.gonglv / 100 / 100f));
         if (StudentApplication.mManageDataBean.getState_power() != cmd_msg_back.powerState) {
             StudentApplication.mManageDataBean.setState_power(cmd_msg_back.powerState);
             senStateChange();
@@ -439,20 +442,29 @@ public class MainActivity extends BaseActivity {
 
                 }
             }
-
         }
-
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
+    protected void onDestroy() {
+        super.onDestroy();
+        mAppService.removeDataChangeInterFace(this);
     }
 
     private void senStateChange() {
         StudentApplication.mManageDataBean.CMD = CONTROL;
         mAppService.sendDataToServer(StudentApplication.mManageDataBean);
+        if (StudentApplication.mManageDataBean.getState_power() == 1) {
+
+            mPower.setText("关闭电源");
+        } else {
+            if (StudentApplication.mManageDataBean.MODE == TEST) {
+                mPower.setText("打开电源");
+            } else {
+
+                mPower.setText("申请用电");
+            }
+        }
     }
 
 
@@ -466,8 +478,6 @@ public class MainActivity extends BaseActivity {
             mTvConnectState.setText("未连接");
             StudentApplication.mManageDataBean.setState_connet(0);
             mTvConnectState.setTextColor(getResources().getColor(R.color.textcolor));
-
         }
     }
-
 }

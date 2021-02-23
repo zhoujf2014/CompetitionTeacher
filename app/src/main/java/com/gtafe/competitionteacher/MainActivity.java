@@ -148,11 +148,13 @@ public class MainActivity extends BaseActivity {
     public GtaAlerDialog mGtaAlerDialog;
 
     public GtaAddCompetitonDialog mGtaAddCompetitonDialog;
-    public ManageDataBean.EMU_MODE mEmu_mode;
+    public static ManageDataBean.EMU_MODE mEmu_mode;
     public boolean mSendAler;
 
     @Override
     protected void init() {
+        mainCompetitionYaoqiu.setSelected(true);
+        mainCompetitionTitle.setSelected(true);
         Intent intent = getIntent();
         String mUser = intent.getStringExtra(Constant.USER);
 
@@ -193,8 +195,6 @@ public class MainActivity extends BaseActivity {
             mainViewCompetition.setVisibility(View.GONE);
 
         }
-
-
     }
 
     private void initTimeThread() {
@@ -282,18 +282,23 @@ public class MainActivity extends BaseActivity {
             sendDataToAllClient(manageDataBean);
             initCompetition();
         }
+        ManageDataBean singleManageBean = getSingleManageBean(userDataBean);
         if (mEmu_mode != COMPETITION) {
-
-            ManageDataBean singleManageBean = getSingleManageBean(userDataBean);
             if (singleManageBean != null) {
                 singleManageBean.setTime(userDataBean.getTime());
                 singleManageBean.setState_power(userDataBean.getState_power());
                 singleManageBean.setState_connet(userDataBean.getState_connet());
                 mCompelitionAdapter.notifyDataSetChanged();
 
-
             }
         }
+        if (singleManageBean!=null) {
+            if (singleManageBean.getState_connet() == 0) {
+                singleManageBean.setState_connet(1);
+            }
+        }
+
+
     }
 
     @Override
@@ -314,9 +319,9 @@ public class MainActivity extends BaseActivity {
                 } else {
                     mGtaAlerDialog = new GtaAlerDialog(mContext);
                     mGtaAlerDialog.setButtonCancle("取消");
-                    mGtaAlerDialog.setTitle(null, "切换到学习模式");
+                    mGtaAlerDialog.setTitle(null, "切换到训练模式");
 
-                    mGtaAlerDialog.setMsg("当前有未结束的竞赛，是否还要切换到学习模式？");
+                    mGtaAlerDialog.setMsg("当前有未结束的竞赛，是否还要切换到训练模式？");
                     mGtaAlerDialog.setButtonConfir("确定");
                     mGtaAlerDialog.setOnclikLisener(new GtaAlerDialog.OnButtonClickLisener() {
                         @Override

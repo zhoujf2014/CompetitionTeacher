@@ -93,11 +93,8 @@ public class SettingActivity extends BaseActivity {
                 }
                 if (mAppService != null) {
                     mAppService.sendBianhao(bianhao);
-
                 }
                 break;
-
-
         }
     }
 
@@ -106,11 +103,8 @@ public class SettingActivity extends BaseActivity {
         mTvSN.setText("设备SN：" + StudentApplication.SN);
 
         if (state) {
-
             mConnectState.setText("已连接");
             mConnectState.setTextColor(getResources().getColor(R.color.text_green));
-
-
         } else {
             mConnectState.setText("未连接");
             mConnectState.setTextColor(getResources().getColor(R.color.textcolor));

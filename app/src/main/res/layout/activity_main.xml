@@ -110,7 +110,13 @@
                     <TextView
                         android:id="@+id/main_competition_title"
                         android:layout_width="wrap_content"
+                        android:maxWidth="150dp"
                         android:layout_height="wrap_content"
+                        android:ellipsize="marquee"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:singleLine="true"
                         android:text="新能源汽车操作竞赛" />
 
                     <TextView
@@ -233,7 +239,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_bg_login_confir"
                 android:padding="10dp"
-                android:text="设备批量上电"
+                android:text="批量打开电源"
                 android:textColor="#fff"
                 android:textSize="15sp" />
 
@@ -245,7 +251,7 @@
                 android:layout_marginRight="40dp"
                 android:background="@drawable/selector_bg_login_confir"
                 android:padding="10dp"
-                android:text="设备批量断电"
+                android:text="批量关闭电源"
                 android:textColor="#fff"
                 android:textSize="15sp" />
         </LinearLayout>
