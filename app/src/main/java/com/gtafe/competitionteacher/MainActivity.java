@@ -220,10 +220,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onAddnewBianhao(ManageDataBean manageDataBean) {
+        if (isFinishing()) {
+            return;
+        }
         if (mIsSetting) {
-            if (isFinishing()) {
-                return;
-            }
+
             if (mGtaAlerDialog != null && mGtaAlerDialog.isShowing()) {
                 mGtaAlerDialog.cancel();
             }
