@@ -5,9 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 public class SplashActivity extends BaseActivity {
@@ -15,33 +19,59 @@ public class SplashActivity extends BaseActivity {
 
     public boolean mSetting;
 
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            if (msg.what==1) {
+                int time = (int) msg.obj;
+                mViewById.setText("设置（"+time+"）");
+                if (time==0) {
+                    startActivity(new Intent(mContext, MainActivity.class));
+
+                }
+            }
+        }
+    };
+    public TextView mViewById;
+
     @Override
     protected void init() {
+        mViewById = (TextView) findViewById(R.id.splash_setting);
+       // initTimer();
+        checkPermission();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initTimer();
+    }
+
+    private void initTimer() {
         new Thread() {
             @Override
             public void run() {
                 super.run();
-                int i = 0;
-                while (true) {
+                int i = 5;
+                while (isShow&&i>=0) {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    i++;
-                    if (i > 1) {
+                    Message message = mHandler.obtainMessage();
+                    message.what = 1;
+                    message.obj = i;
+                    mHandler.sendMessage(message);
+                    i--;
 
-                        break;
-                    }
                 }
 
-                if (!mSetting) {
-                    startActivity(new Intent(mContext, MainActivity.class));
-                }
+
 
             }
         }.start();
-        checkPermission();
     }
 
     @Override

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/beijing3"
+    android:background="@drawable/beijing1234"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -54,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|right"
-        android:layout_marginRight="100dp"
+        android:layout_marginRight="60dp"
         android:background="@drawable/bg_login_view"
         android:focusable="true"
         android:focusableInTouchMode="true"
@@ -73,7 +73,7 @@
             android:id="@+id/user"
             android:layout_width="@dimen/edit_width"
             android:layout_height="@dimen/edit_height"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/bg_edit"
             android:drawableLeft="@mipmap/yonghuming2"
             android:drawablePadding="3dp"
@@ -83,7 +83,7 @@
 
             android:text="admin"
             android:textColor="@color/textcolor"
-            android:textSize="9sp" />
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/pwd"
@@ -98,7 +98,7 @@
             android:padding="8dp"
             android:text="gtafe2018"
             android:textColor="@color/textcolor"
-            android:textSize="9sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -111,7 +111,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:gravity="center">
 
             <Button

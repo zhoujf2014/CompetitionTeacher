@@ -1,5 +1,6 @@
 package com.gtafe.competitionstudent;
 
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -107,6 +108,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void init() {
+        mTvTitle.setSelected(true);
+        mTvMsg.setSelected(true);
         mTvSn.setText("设备SN：" + StudentApplication.SN);
         mTvBianhao.setText("设备编号：" + StudentApplication.mManageDataBean.getBianhao());
         initTimeThread();
@@ -156,6 +159,9 @@ public class MainActivity extends BaseActivity {
                         StudentApplication.mManageDataBean.CMD = COMPlETE;
                         StudentApplication.mManageDataBean.setState_connet(3);
                         mAppService.sendDataToServer(StudentApplication.mManageDataBean);
+                        mComfir.setText("已完成");
+                        mComfir.setTextColor(Color.GREEN);
+                        mComfir.setEnabled(false);
                     }
 
                     @Override
@@ -271,14 +277,14 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onReceivDataFromServer(ManageDataBean userDataBean) {
-
+        if (isFinishing()) {
+            return;
+        }
 
         switch (userDataBean.CMD) {
             case CHANGEMODE:
                 ManageDataBean.TestBean testBean = userDataBean.getTestBean();
-                if (testBean != null) {
-                    StudentApplication.mManageDataBean.setTestBean(testBean);
-                }
+                StudentApplication.mManageDataBean.setTestBean(testBean);
 
                 switch (userDataBean.MODE) {
                     case COMPETITION:
@@ -291,12 +297,15 @@ public class MainActivity extends BaseActivity {
                         mPower.setVisibility(View.GONE);
                         mTvMsg.setVisibility(View.VISIBLE);
                         mTvDate.setVisibility(View.VISIBLE);
+                        mTvTitle.setText("");
                         mComfir.setVisibility(View.VISIBLE);
 
-                        mTvTitle.setText("");
                         mStartTime = 0;
                         StudentApplication.mManageDataBean.time = 0;
                         setTestData(StudentApplication.mManageDataBean.getTestBean());
+                        mComfir.setText("完成");
+                        mComfir.setTextColor(Color.WHITE);
+                        mComfir.setEnabled(true);
                         break;
                     case STUDY:
                         modeStudy();
@@ -315,9 +324,9 @@ public class MainActivity extends BaseActivity {
                             mPower.setText("打开电源");
                         }
                         mTvMsg.setVisibility(View.GONE);
+                        mTvTitle.setText("");
                         mTvDate.setVisibility(View.GONE);
-
-
+                        mComfir.setVisibility(View.GONE);
 
 
                         break;
@@ -342,6 +351,7 @@ public class MainActivity extends BaseActivity {
 
                 break;
             case TIMEALERT:
+
                 if (mPixAlerDialog != null && mPixAlerDialog.isShowing()) {
                     mPixAlerDialog.cancel();
                 }
@@ -385,7 +395,9 @@ public class MainActivity extends BaseActivity {
                     }
                 });
                 mPixAlerDialog.show();
-
+                mComfir.setText("已完成");
+                mComfir.setTextColor(Color.GREEN);
+                mComfir.setEnabled(false);
 
                 break;
             case TESTDATA:
@@ -416,6 +428,11 @@ public class MainActivity extends BaseActivity {
         mTvMsg.setVisibility(View.GONE);
         mTvDate.setVisibility(View.GONE);
         mComfir.setVisibility(View.GONE);
+        if (StudentApplication.mManageDataBean.getState_power() == 1) {
+            mPower.setText("关闭电源");
+        } else {
+            mPower.setText("申请用电");
+        }
     }
 
     private void setTestData(ManageDataBean.TestBean testBean) {
@@ -428,25 +445,32 @@ public class MainActivity extends BaseActivity {
                 mTvMsg.setText("竞赛要求：" + testBean.getDes());
             }
 
+        } else {
+            mTvMsg.setText("");
+            mTvDate.setText("");
+            mTvTitle.setText("");
         }
     }
 
     @Override
     public void onReceivDataFromSerial(CMD_MSG_BACK cmd_msg_back) {
-
+        if (isFinishing()) {
+            return;
+        }
         //mAppService.sendDataToSerial(cmd_msg_cmd.pack());
         mTvDianya.setText(String.format("设备电压：%sV", (int) (cmd_msg_back.dianya / 10000f)));
         mTvDianliu.setText(String.format("设备电流：%sA", cmd_msg_back.dianliu / 100 / 100f));
         mTvGonglv.setText(String.format("设备功率：%sW", cmd_msg_back.gonglv / 100 / 100f));
         if (StudentApplication.mManageDataBean.getState_power() != cmd_msg_back.powerState) {
             StudentApplication.mManageDataBean.setState_power(cmd_msg_back.powerState);
-            senStateChange();
+
             if (StudentApplication.mManageDataBean.getState_power() == 1) {
                 if (StudentApplication.mManageDataBean.MODE.equals(TEST)) {
 
                 }
             }
         }
+        senStateChange();
     }
 
     @Override
@@ -474,6 +498,9 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onConnectStateChange(boolean state) {
+        if (isFinishing()) {
+            return;
+        }
         if (state) {
             StudentApplication.mManageDataBean.setState_connet(1);
             mTvConnectState.setText("已连接");

@@ -187,14 +187,14 @@ public class MainActivity extends BaseActivity {
             mainCompetitionTitle.setText(mTestBean.getTitle());
             mainCompetitionTime.setText("竞赛时间：" + Util.getFormatDate(mTestBean.getTime_start()) + "-" + Util.getFormattime(mTestBean.getTime_stop()));
             mainCompetitionYaoqiu.setText("竞赛要求：" + mTestBean.getDes());
-            ManageDataBean manageDataBean = new ManageDataBean();
-            manageDataBean.CMD = TESTDATA;
-            manageDataBean.setTestBean(mTestBean);
-            sendDataToAllClient(manageDataBean);
+
         } else {
             mainViewCompetition.setVisibility(View.GONE);
-
         }
+        ManageDataBean manageDataBean = new ManageDataBean();
+        manageDataBean.CMD = TESTDATA;
+        manageDataBean.setTestBean(mTestBean);
+        sendDataToAllClient(manageDataBean);
     }
 
     private void initTimeThread() {
@@ -221,7 +221,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onAddnewBianhao(ManageDataBean manageDataBean) {
         if (mIsSetting) {
-            if (isDesdory) {
+            if (isFinishing()) {
                 return;
             }
             if (mGtaAlerDialog != null && mGtaAlerDialog.isShowing()) {
@@ -272,6 +272,9 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onTimeChange(ManageDataBean userDataBean) {
+        if (isFinishing()) {
+            return;
+        }
         if (userDataBean.MODE != mEmu_mode) {
             ManageDataBean manageDataBean = new ManageDataBean();
             manageDataBean.CMD = CHANGEMODE;
@@ -280,7 +283,7 @@ public class MainActivity extends BaseActivity {
                 manageDataBean.setTestBean(mTestBean);
             }
             sendDataToAllClient(manageDataBean);
-            initCompetition();
+            //initCompetition();
         }
         //
         ManageDataBean singleManageBean = getSingleManageBean(userDataBean);
@@ -426,6 +429,7 @@ public class MainActivity extends BaseActivity {
                                 mTestBean = null;
                                 SharePrefrenceUtils.putString(mContext, Constant.CompetitionBean, "");
                                 initCompetition();
+
                             }
 
                             @Override
@@ -628,35 +632,38 @@ public class MainActivity extends BaseActivity {
         ManageDataBean singleManageBean = null;
         switch (userDataBean.CMD) {
             case YONGDIAN:
+                ManageDataBean singleManageBean1 = getSingleManageBean(userDataBean);
+                if (singleManageBean1!=null) {
+                    GtaAlerDialog gtaAlerDialog = new GtaAlerDialog(mContext);
+                    gtaAlerDialog.setTitle(null, "申请用电");
+                    gtaAlerDialog.setMsg(userDataBean.getBianhao() + "\n申请用电");
+                    gtaAlerDialog.setButtonConfir("批准");
+                    gtaAlerDialog.setButtonCancle("拒绝");
+                    gtaAlerDialog.setOnclikLisener(new GtaAlerDialog.OnButtonClickLisener() {
+                        @Override
+                        public void OnConfirmButtonClick() {
+                            ManageDataBean manageDataBean = new ManageDataBean();
+                            manageDataBean.CMD = YONGDIAN;
+                            manageDataBean.SN = userDataBean.SN;
+                            manageDataBean.setState_power(1);
+                            sendDataToClient(manageDataBean.SN, manageDataBean);
+                        }
 
-                GtaAlerDialog gtaAlerDialog = new GtaAlerDialog(mContext);
-                gtaAlerDialog.setTitle(null, "申请用电");
-                gtaAlerDialog.setMsg(userDataBean.getBianhao() + "\n申请用电");
-                gtaAlerDialog.setButtonConfir("批准");
-                gtaAlerDialog.setButtonCancle("拒绝");
-                gtaAlerDialog.setOnclikLisener(new GtaAlerDialog.OnButtonClickLisener() {
-                    @Override
-                    public void OnConfirmButtonClick() {
-                        ManageDataBean manageDataBean = new ManageDataBean();
-                        manageDataBean.CMD = YONGDIAN;
-                        manageDataBean.SN = userDataBean.SN;
-                        manageDataBean.setState_power(1);
-                        sendDataToClient(manageDataBean.SN, manageDataBean);
-                    }
+                        @Override
+                        public void OnCancleButtonClick() {
 
-                    @Override
-                    public void OnCancleButtonClick() {
+                        }
+                    });
+                    gtaAlerDialog.show();
+                }
 
-                    }
-                });
-                gtaAlerDialog.show();
                 break;
             case JUSHOU:
                 singleManageBean = getSingleManageBean(userDataBean);
                 if (singleManageBean != null) {
                     singleManageBean.setState_hand(userDataBean.getState_hand());
+
                 }
-                mCompelitionAdapter.notifyDataSetChanged();
                 break;
             case CONTROL:
                 singleManageBean = getSingleManageBean(userDataBean);
@@ -666,8 +673,9 @@ public class MainActivity extends BaseActivity {
                     singleManageBean.setState_power(userDataBean.getState_power());
                     singleManageBean.setState_control(userDataBean.getState_control());
 
+
                 }
-                mCompelitionAdapter.notifyDataSetChanged();
+                break;
             case TESTDATA:
                 if (TeacherApplication.mTestBean != null) {
                     ManageDataBean manageDataBean = new ManageDataBean();
@@ -681,10 +689,16 @@ public class MainActivity extends BaseActivity {
                 singleManageBean = getSingleManageBean(userDataBean);
                 if (singleManageBean != null) {
                     singleManageBean.setState_connet(userDataBean.getState_connet());
-
                 }
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAppService.removeDataChangeInterFace(this);
+
     }
 
     private ManageDataBean getSingleManageBean(ManageDataBean userDataBean) {

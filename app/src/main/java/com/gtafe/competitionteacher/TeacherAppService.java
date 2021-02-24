@@ -347,7 +347,7 @@ public class TeacherAppService extends Service {
                                             for (ManageDataBean manageDataBean1 : TeacherApplication.sManageDataBeans) {
                                                 if (manageDataBean1.SN.equals(this.SN)) {
                                                     manageDataBean1.setState_connet(1);
-                                                    sendNotifyTag();
+
                                                     break;
                                                 }
                                                 senTestData(manageDataBean1);
@@ -365,7 +365,7 @@ public class TeacherAppService extends Service {
 
 
                             Log.e(TAG, "run: " + jsonString);
-
+                            sendNotifyTag();
                         }
                     }
                 }
@@ -404,12 +404,7 @@ public class TeacherAppService extends Service {
             }
         }
 
-        private void sendNotifyTag() {
-            Message message = mHandler.obtainMessage();
-            message.what = 1;
 
-            mHandler.sendMessage(message);
-        }
 
 
         private void sendHeartData(ManageDataBean manageDataBean) {
@@ -432,7 +427,12 @@ public class TeacherAppService extends Service {
 
 
     }
+    private void sendNotifyTag() {
+        Message message = mHandler.obtainMessage();
+        message.what = 1;
 
+        mHandler.sendMessage(message);
+    }
     private void senTestData(ManageDataBean manageDataBean) {
         if (TeacherApplication.mTestBean != null) {
             manageDataBean.CMD = TESTDATA;

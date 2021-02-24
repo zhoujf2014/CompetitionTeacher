@@ -110,8 +110,8 @@
                     <TextView
                         android:id="@+id/main_competition_title"
                         android:layout_width="wrap_content"
-                        android:maxWidth="150dp"
                         android:layout_height="wrap_content"
+                        android:maxWidth="150dp"
                         android:ellipsize="marquee"
                         android:focusable="true"
                         android:focusableInTouchMode="true"

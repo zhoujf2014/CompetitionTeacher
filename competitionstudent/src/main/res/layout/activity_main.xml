@@ -103,6 +103,11 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
             android:text=""
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
             android:textColor="@color/text_blue"
             android:textSize="30sp" />
 
@@ -127,7 +132,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
 
-
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
             android:text="竞赛要求：在规定时间内完成维修任务"
             android:textColor="@color/textcolor"
             android:textSize="20sp" />

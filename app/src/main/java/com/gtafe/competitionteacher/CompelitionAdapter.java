@@ -104,8 +104,8 @@ public class CompelitionAdapter extends RecyclerView.Adapter {
                 case R.id.item_hand:
 
                     GtaAlerDialog gtaAlerDialog = new GtaAlerDialog(mMainActivity);
-                    gtaAlerDialog.setTitle("工位");
-                    gtaAlerDialog.setMessage(mManageDataBean.getBianhao() + "\n举手提问");
+                    gtaAlerDialog.setTitle(null,"工位");
+                    gtaAlerDialog.setMsg(mManageDataBean.getBianhao() + "\n举手提问");
                     gtaAlerDialog.setButtonConfir("已知悉");
 
                     gtaAlerDialog.setOnclikLisener(new GtaAlerDialog.OnButtonClickLisener() {

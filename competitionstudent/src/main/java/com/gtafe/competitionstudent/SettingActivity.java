@@ -74,6 +74,7 @@ public class SettingActivity extends BaseActivity {
                 }
                 mIp = trim;
                 SharePrefrenceUtils.putString(mContext, Constant.CENTER_IP, mIp);
+                mTvIp.setText(mIp);
                 GtaToast.toastOne(mContext, "保存成功");
                 break;
             case R.id.setting_connet:
